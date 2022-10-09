@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">MLKitApp</string>
+    
+    <string name="home">Home</string>
+    <string name="saved">Saved</string>
+    <string name="map">Map</string>
+    <string name="gallery">Gallery</string>
+
+    <string name="text_field">Text field</string>
+    <string name="document">Document</string>
+    <string name="barcode">Barcode</string>
+    <string name="face">Face</string>
+    <string name="image">Image</string>
+
+    <string name="menu">Menu</string>
+
+    <string name="camera_permission_disabled_title">Permission to access camera is disabled</string>
+    <string name="camera_permission_disabled_info">Permission to access is required to take photos of documents. Please go to Settings > App to allow App to access the camera</string>
+    <string name="camera_permission_info">Permission to access is required to take photos of documents. Please allow App to access the camera</string>
+    <string name="camera_permission_title">App would like to have access to camera</string>
+    <string name="camera_permission_button">OK</string>
+    <string name="camera_permission_disabled_button">Go to settings</string>
+</resources>
