@@ -15,15 +15,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.mlkitapp.ui.main.screens.SavedScreen
-import com.example.mlkitapp.ui.common.TopBar
 import com.example.mlkitapp.ui.authentication.AuthViewModel
 import com.example.mlkitapp.ui.authentication.FirebaseActivity
+import com.example.mlkitapp.ui.common.AppBottomNavigation
+import com.example.mlkitapp.ui.common.TopBar
+import com.example.mlkitapp.ui.main.nav.navitems.BottomNavItems
+import com.example.mlkitapp.ui.main.screens.BuildCameraUi
 import com.example.mlkitapp.ui.main.screens.GalleryScreen
 import com.example.mlkitapp.ui.main.screens.MapScreen
-import com.example.mlkitapp.ui.main.nav.navitems.BottomNavItems
-import com.example.mlkitapp.ui.common.AppBottomNavigation
-import com.example.mlkitapp.ui.main.textrecognition.BuildCameraUi
+import com.example.mlkitapp.ui.main.screens.SavedScreen
 import kotlinx.coroutines.launch
 
 @OptIn(InternalComposeApi::class)
