@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "350873722416",
+    "project_id": "mlkitapp-9319e",
+    "storage_bucket": "mlkitapp-9319e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:350873722416:android:c61e1043273206dd13d7f5",
+        "android_client_info": {
+          "package_name": "com.example.mlkitapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "350873722416-udvf3o3mfkcdu24052e8vo39f2ukvec4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mlkitapp",
+            "certificate_hash": "3ff8b4f21fc63bd9980d9b28d46512260ff331e5"
+          }
+        },
+        {
+          "client_id": "350873722416-nkkpua2ka87gkcb1bk5f265ueas4c9vf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASDlT_pSbDhOPg_0F3LEacgezJBgkdL6M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "350873722416-nkkpua2ka87gkcb1bk5f265ueas4c9vf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

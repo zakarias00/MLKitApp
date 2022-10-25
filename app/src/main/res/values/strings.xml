@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">MLKitApp</string>
-    
+
+    <string name="client_secret">350873722416-nkkpua2ka87gkcb1bk5f265ueas4c9vf.apps.googleusercontent.com</string>
+
     <string name="home">Home</string>
     <string name="saved">Saved</string>
     <string name="map">Map</string>
@@ -20,4 +22,5 @@
     <string name="camera_permission_title">App would like to have access to camera</string>
     <string name="camera_permission_button">OK</string>
     <string name="camera_permission_disabled_button">Go to settings</string>
+    <string name="title_activity_firebase">FirebaseActivity</string>
 </resources>
