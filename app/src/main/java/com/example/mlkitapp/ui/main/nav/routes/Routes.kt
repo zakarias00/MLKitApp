@@ -20,3 +20,7 @@ const val NAV_RECOGNIZED_TEXT = "recognized_text"
 const val NAV_LOGIN = "login"
 const val NAV_SIGNUP = "signup"
 
+const val NAV_PROFILE = "profile"
+const val NAV_PROFILE_SETTINGS = "profile_settings"
+const val NAV_PROFILE_ACCOUNT_MANAGEMENT = "profile_settings_management"
+

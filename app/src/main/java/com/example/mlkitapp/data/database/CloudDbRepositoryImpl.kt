@@ -1,14 +1,22 @@
 package com.example.mlkitapp.data.database
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import com.example.mlkitapp.data.Resource
 import com.example.mlkitapp.data.models.RecognizedText
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.storage.FirebaseStorage
 import javax.inject.Inject
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
+import java.io.ByteArrayOutputStream
+import java.io.IOException
+import java.net.URL
+import java.net.URLEncoder
+import java.util.UUID
 
 class CloudDbRepositoryImpl @Inject constructor(
     private val dbReference: CollectionReference,
@@ -62,6 +70,38 @@ class CloudDbRepositoryImpl @Inject constructor(
             emit(Resource.Success(delOperation))
         } catch (e: Exception){
             emit(Resource.Failure(e))
+        }
+    }
+
+
+    private fun uploadPostWithImage(imageUrl: String) {
+        try {
+            val image = BitmapFactory.decodeStream(URL(imageUrl).openConnection().getInputStream())
+            val baos = ByteArrayOutputStream()
+            image.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+            val imageInBytes = baos.toByteArray()
+
+            val storageReference = FirebaseStorage.getInstance().reference
+            val newImageName = URLEncoder.encode(UUID.randomUUID().toString(), "UTF-8") + ".jpg"
+            val newImageRef = storageReference.child("images/$newImageName")
+
+            newImageRef.putBytes(imageInBytes)
+                .addOnFailureListener { exception ->
+                    //Toast
+                }
+                .continueWithTask { task ->
+                    if (!task.isSuccessful) {
+                        task.exception?.let { throw it }
+                    }
+
+                    newImageRef.downloadUrl
+                }
+                .addOnSuccessListener { downloadUri ->
+                    //upload
+                }
+
+        } catch (_: IOException) {
+
         }
     }
 }

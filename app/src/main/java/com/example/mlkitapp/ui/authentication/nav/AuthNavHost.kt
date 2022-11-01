@@ -1,4 +1,4 @@
-package com.example.mlkitapp.ui.authentication
+package com.example.mlkitapp.ui.authentication.nav
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel

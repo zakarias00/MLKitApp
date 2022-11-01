@@ -49,14 +49,15 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.mlkitapp.ui.main.MainActivity
 import com.example.mlkitapp.R
 import com.example.mlkitapp.data.Resource
 import com.example.mlkitapp.ui.authentication.AuthViewModel
+import com.example.mlkitapp.ui.main.MainActivity
 import com.example.mlkitapp.ui.main.nav.routes.NAV_LOGIN
 import com.example.mlkitapp.ui.main.nav.routes.NAV_SIGNUP
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -136,7 +137,6 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
                             }
                         }
                     },
-                visualTransformation = PasswordVisualTransformation(),
                 value = userPassword,
                 label = {
                     Text(text = "Password")
@@ -149,6 +149,11 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
                         focusManager.clearFocus()
                     }
                 ),
+                visualTransformation = if (showPassword) {
+                    VisualTransformation.None
+                } else {
+                    PasswordVisualTransformation()
+                },
                 trailingIcon = {
 
                     if (showPassword) {

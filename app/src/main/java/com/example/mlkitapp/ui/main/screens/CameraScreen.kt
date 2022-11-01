@@ -144,10 +144,6 @@ fun BuildCameraUi(
         }
 }
 
-interface OpenSettingsInterface {
-    fun onOpenSettingsClick()
-}
-
 @Composable
 private fun checkPermissions(): Boolean{
     val cameraPermission = ContextCompat.checkSelfPermission(LocalContext.current, CAMERA)
@@ -162,7 +158,6 @@ fun PermissionCard(
     @StringRes infoTextRes: Int,
     @StringRes buttonTextRes: Int,
     cameraPermissionState: PermissionState,
-    //listener: OpenSettingsInterface
 ){
     Card(
         backgroundColor = Color.White,

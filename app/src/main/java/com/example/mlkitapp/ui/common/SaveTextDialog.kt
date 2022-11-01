@@ -29,13 +29,14 @@ import com.example.mlkitapp.data.Resource
 import com.example.mlkitapp.ui.main.db.CloudDbViewModel
 import com.google.firebase.auth.FirebaseAuth
 
+
 @OptIn(InternalComposeApi::class)
 @Composable
 fun SaveTextDialog(
     onDismiss: () -> Unit,
     dbViewModel: CloudDbViewModel,
     recognizedText: String,
-    imageUrl: String
+    imageUrl: String,
 ) {
     val saveTextFlow = dbViewModel.saveRecordFlow
     val currentUserId = FirebaseAuth.getInstance().currentUser!!.uid
@@ -134,6 +135,28 @@ fun SaveTextDialog(
         }
     }
 }
+
+//private fun uploadPostWithImage(imageUrl: String, context: Context) {
+//    val bitmap: Bitmap = (imageUrl as BitmapDrawable).bitmap
+//
+//
+//    try {
+//        val url = URL(imageUrl)
+//        val image = BitmapFactory.decodeStream(url.openConnection().getInputStream())
+//    } catch (e: IOException) {
+//        System.out.println(e)
+//    }
+//    val baos = ByteArrayOutputStream()
+//    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+//    val imageInBytes = baos.toByteArray()
+//
+//    val storageReference = FirebaseStorage.getInstance().reference
+//    val newImageName = URLEncoder.encode(UUID.randomUUID().toString(), "UTF-8") + ".jpg"
+//    val newImageRef = storageReference.child("images/$newImageName")
+//
+//
+//}
+
 
 @Preview
 @Composable
