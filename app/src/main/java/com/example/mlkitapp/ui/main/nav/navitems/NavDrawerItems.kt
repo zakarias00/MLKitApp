@@ -14,9 +14,9 @@ sealed class NavDrawerItems(
     @DrawableRes val icon: Int,
     val navRoute: String
 ){
-    object Text_field : NavDrawerItems(R.string.text_field, R.drawable.ic_text_fields, NAV_TEXT_FIELD)
+    object TextField : NavDrawerItems(R.string.text_field, R.drawable.ic_text_fields, NAV_TEXT_FIELD)
     object Document : NavDrawerItems(R.string.document, R.drawable.ic_document, NAV_DOCUMENT)
-    object Barcode : NavDrawerItems(R.string.barcode, R.drawable.ic_camera, NAV_BARCODE)
+    object Barcode : NavDrawerItems(R.string.barcode, R.drawable.ic_qr_code, NAV_BARCODE)
     object Face : NavDrawerItems(R.string.face, R.drawable.ic_face, NAV_FACE)
     object Image : NavDrawerItems(R.string.image, R.drawable.ic_image, NAV_IMAGE)
 }

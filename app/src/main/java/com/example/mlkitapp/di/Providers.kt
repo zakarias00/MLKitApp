@@ -1,17 +1,18 @@
 package com.example.mlkitapp.di
 
-import com.example.mlkitapp.data.database.CloudDbRepository
-import com.example.mlkitapp.data.database.CloudDbRepositoryImpl
 import com.example.mlkitapp.data.auth.AuthRepository
 import com.example.mlkitapp.data.auth.AuthRepositoryImpl
+import com.example.mlkitapp.data.contants.Constants.CollectionName
+import com.example.mlkitapp.data.database.CloudDbRepository
+import com.example.mlkitapp.data.database.CloudDbRepositoryImpl
 import com.example.mlkitapp.data.mlkit.barcodescan.BarcodeScannerRepository
 import com.example.mlkitapp.data.mlkit.barcodescan.BarcodeScannerRepositoryImpl
-import com.example.mlkitapp.data.contants.Constants.CollectionName
 import com.example.mlkitapp.data.mlkit.textrecogn.TextRecognRepository
 import com.example.mlkitapp.data.mlkit.textrecogn.TextRecognRepositoryImpl
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,6 +28,9 @@ class Providers {
     fun provideFirebaseDb(): FirebaseFirestore = FirebaseFirestore.getInstance()
 
     @Provides
+    fun provideFirebaseStorage(): FirebaseStorage = FirebaseStorage.getInstance()
+
+    @Provides
     fun provideAuthRepository(implementation: AuthRepositoryImpl): AuthRepository = implementation
 
     @Provides
@@ -39,5 +43,5 @@ class Providers {
     fun provideTextReference(db: FirebaseFirestore) = db.collection(CollectionName)
 
     @Provides
-    fun provideRecordRepository(textReference: CollectionReference): CloudDbRepository = CloudDbRepositoryImpl(textReference)
+    fun provideRecordRepository(textReference: CollectionReference, storage: FirebaseStorage): CloudDbRepository = CloudDbRepositoryImpl(textReference, storage)
 }

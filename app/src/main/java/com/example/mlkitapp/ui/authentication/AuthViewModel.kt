@@ -1,5 +1,6 @@
 package com.example.mlkitapp.ui.authentication
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mlkitapp.data.Resource
@@ -26,6 +27,9 @@ class AuthViewModel @Inject constructor(
     private val _credentialLoginFlow = MutableStateFlow<Resource<FirebaseUser>?>(null)
     val credentialLoginFlow: StateFlow<Resource<FirebaseUser>?> = _credentialLoginFlow
 
+    private val _resetPasswordFlow = MutableStateFlow<Resource<Void>?>(null)
+    val resetPasswordFlow: StateFlow<Resource<Void>?> = _resetPasswordFlow
+
     val currentUser: FirebaseUser?
         get() = repository.currentUser
 
@@ -38,6 +42,7 @@ class AuthViewModel @Inject constructor(
     fun login(email: String, password: String) = viewModelScope.launch {
         _loginFlow.value = Resource.Loading
         val result = repository.login(email, password)
+        Log.i("hiba", result.toString())
         _loginFlow.value = result
     }
 
@@ -52,6 +57,12 @@ class AuthViewModel @Inject constructor(
         _signupFlow.value = Resource.Loading
         val result = repository.signUp(email, password)
         _signupFlow.value = result
+    }
+
+    fun resetPassword(email: String) = viewModelScope.launch {
+        _resetPasswordFlow.value = Resource.Loading
+        val result = repository.recoverPassword(email)
+        _resetPasswordFlow.value = result
     }
 
     fun logout() {

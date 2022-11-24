@@ -15,7 +15,11 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.model.LatLng
 
+
 object LocationUtils {
+
+    lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
     fun getDefaultLocation(): Location {
         return Location(LocationManager.GPS_PROVIDER)
     }
@@ -30,8 +34,10 @@ object LocationUtils {
     @SuppressLint("MissingPermission")
     fun requestLocationResultCallback(
         fusedLocationProviderClient: FusedLocationProviderClient,
-        locationResultCallback: (LocationResult) -> Unit
+        locationResultCallback: (LocationResult) -> Unit,
     ) {
+        val UPDATE_INTERVAL_IN_MILLISECONDS: Long = 1000
+        val UPDATE_FASTEST_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 4
 
         val locationCallback = object : LocationCallback() {
 
@@ -44,8 +50,8 @@ object LocationUtils {
         }
 
         val locationRequest = LocationRequest.create().apply {
-            interval = 0
-            fastestInterval = 0
+            interval = UPDATE_INTERVAL_IN_MILLISECONDS
+            fastestInterval = UPDATE_FASTEST_INTERVAL_IN_MILLISECONDS
             priority = Priority.PRIORITY_HIGH_ACCURACY
         }
 

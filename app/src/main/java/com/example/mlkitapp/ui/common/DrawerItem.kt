@@ -26,20 +26,19 @@ import com.example.mlkitapp.ui.main.nav.navitems.NavDrawerItems
 
 @Composable
 fun DrawerItem(item: NavDrawerItems, selected: Boolean, onItemClick: (NavDrawerItems) -> Unit) {
-    val background = if (selected) Color.Cyan else Color.Transparent
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = { onItemClick(item) })
             .height(45.dp)
-            .background(color = MaterialTheme.colors.secondaryVariant)
-            .padding(start = 10.dp)
+            .background(color = MaterialTheme.colors.primary)
+            .padding(start = 48.dp)
     ) {
         Image(
             painter = painterResource(id = item.icon),
             contentDescription = stringResource(id = item.title),
-            colorFilter = ColorFilter.tint(Color.Black),
+            colorFilter = ColorFilter.tint(Color.White),
             contentScale = ContentScale.Fit,
             modifier = Modifier
                 .height(35.dp)
@@ -49,7 +48,7 @@ fun DrawerItem(item: NavDrawerItems, selected: Boolean, onItemClick: (NavDrawerI
         Text(
             text = stringResource(id = item.title),
             fontSize = 18.sp,
-            color = Color.Black
+            color = Color.White
         )
     }
 }
@@ -57,5 +56,5 @@ fun DrawerItem(item: NavDrawerItems, selected: Boolean, onItemClick: (NavDrawerI
 @Preview(showBackground = false)
 @Composable
 fun DrawerItemPreview() {
-    DrawerItem(item = NavDrawerItems.Text_field, selected = false, onItemClick = {})
+    DrawerItem(item = NavDrawerItems.TextField, selected = false, onItemClick = {})
 }

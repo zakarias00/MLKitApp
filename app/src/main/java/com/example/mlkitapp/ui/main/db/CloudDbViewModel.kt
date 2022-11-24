@@ -1,5 +1,6 @@
 package com.example.mlkitapp.ui.main.db
 
+import android.net.Uri
 import androidx.compose.runtime.InternalComposeApi
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -10,6 +11,11 @@ import com.example.mlkitapp.data.database.CloudDbRepository
 import com.example.mlkitapp.data.models.RecognizedText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -17,40 +23,67 @@ import kotlinx.coroutines.launch
 class CloudDbViewModel @Inject constructor(
     private val repository: CloudDbRepository
 ): ViewModel(){
-    private val _getRecordsFlow = mutableStateOf<Resource<List<RecognizedText>>>(Resource.Loading)
-    val getRecordsFlow: State<Resource<List<RecognizedText>>> = _getRecordsFlow
+    private val _getDocumentsFlow = mutableStateOf<Resource<List<RecognizedText>>>(Resource.Loading)
+    val getDocumentsFlow: State<Resource<List<RecognizedText>>> = _getDocumentsFlow
 
-    private val _saveRecordFlow = mutableStateOf<Resource<Void?>>(Resource.Success(null))
-    val saveRecordFlow: State<Resource<Void?>> = _saveRecordFlow
+    private val _saveDocumentFlow = MutableStateFlow<Resource<Void?>>(Resource.Success(null))
+    val saveDocumentFlow: StateFlow<Resource<Void?>> = _saveDocumentFlow
 
-    private val _deleteRecordFlow = mutableStateOf<Resource<Void?>>(Resource.Success(null))
-    val deleteRecordFlow: State<Resource<Void?>> = _deleteRecordFlow
+    private val _editDocumentFlow = MutableStateFlow<Resource<Void?>>(Resource.Success(null))
+    val editDocumentFlow: StateFlow<Resource<Void?>> = _editDocumentFlow
+
+    private val _deleteDocumentFlow = MutableStateFlow<Resource<Void?>>(Resource.Success(null))
+    val deleteDocumentFlow: StateFlow<Resource<Void?>> = _deleteDocumentFlow
 
     init{
-        getRecords()
+        getDocuments()
     }
 
-    private fun getRecords(){
+    private fun getDocuments(){
         viewModelScope.launch {
-            repository.getRecords().collect{
-                _getRecordsFlow.value = it!!
+            repository.getDocuments().collect{
+                _getDocumentsFlow.value = it!!
             }
         }
     }
 
-    fun saveRecord(userId: String, text: String, lat: Double, long: Double, isPrivate: Boolean, imageUrl: String){
-        viewModelScope.launch {
-            repository.saveRecord(userId, text, lat, long, isPrivate, imageUrl).collect{
-                _saveRecordFlow.value = it
-            }
+    fun saveDocumentAndImage(userId: String, title: String, text: String, lat: Double, long: Double, isPrivate: Boolean, imageUri: Uri) = GlobalScope.launch{
+        _saveDocumentFlow.value = Resource.Loading
+        repository.saveDocumentAndImage(userId, title, text, lat, long, isPrivate, imageUri)
+            .flowOn(Dispatchers.IO)
+            .collect{
+                _saveDocumentFlow.value = it
+
         }
     }
 
-    fun deleteRecord(id: String){
-        viewModelScope.launch {
-            repository.deleteRecord(id).collect{
-                _deleteRecordFlow.value = it
+
+    fun saveDocument(userId: String, title: String, text: String, lat: Double, long: Double, isPrivate: Boolean) = viewModelScope.launch {
+        _saveDocumentFlow.value = Resource.Loading
+        repository.saveDocument(userId, title, text, lat, long, isPrivate)
+            .flowOn(Dispatchers.IO)
+            .collect{
+                _saveDocumentFlow.value = it
             }
-        }
     }
+
+    fun deleteDocument(id: String) = viewModelScope.launch {
+        _deleteDocumentFlow.value = Resource.Loading
+        repository.deleteDocument(id)
+            .flowOn(Dispatchers.IO)
+            .collect{
+                _deleteDocumentFlow.value = it
+            }
+    }
+
+
+    fun editDocument(id: String, private: Boolean) = viewModelScope.launch {
+        _editDocumentFlow.value = Resource.Loading
+        repository.editDocument(id, private)
+            .flowOn(Dispatchers.IO)
+            .collect{
+                _editDocumentFlow.value = it
+            }
+    }
+
 }

@@ -1,12 +1,14 @@
 package com.example.mlkitapp.data.database
 
+import android.net.Uri
 import com.example.mlkitapp.data.Resource
 import com.example.mlkitapp.data.models.RecognizedText
 import kotlinx.coroutines.flow.Flow
 
 interface CloudDbRepository {
-    fun getRecords(): Flow<Resource<MutableList<RecognizedText>>?>
-    suspend fun saveRecord(uId: String, recText: String, lat: Double, long: Double, private: Boolean, url : String): Flow<Resource<Void?>>
-    suspend fun editRecord(recognizedText: RecognizedText): Flow<Resource<Void?>>
-    suspend fun deleteRecord(recordId: String): Flow<Resource<Void?>>
+    fun getDocuments(): Flow<Resource<MutableList<RecognizedText>>?>
+    suspend fun saveDocumentAndImage(uId: String, title: String, recText: String, lat: Double, long: Double, private: Boolean, imageUri: Uri): Flow<Resource<Void?>>
+    suspend fun saveDocument(uId: String, title: String, recText: String, lat: Double, long: Double, private: Boolean): Flow<Resource<Void?>>
+    suspend fun editDocument(documentId: String, private: Boolean): Flow<Resource<Void?>>
+    suspend fun deleteDocument(documentId: String): Flow<Resource<Void?>>
 }

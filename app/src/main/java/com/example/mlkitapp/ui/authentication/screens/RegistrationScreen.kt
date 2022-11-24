@@ -1,17 +1,18 @@
 package com.example.mlkitapp.ui.authentication.screens
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -19,13 +20,14 @@ import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,10 +45,15 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.mlkitapp.ui.main.MainActivity
 import com.example.mlkitapp.R
 import com.example.mlkitapp.data.Resource
 import com.example.mlkitapp.ui.authentication.AuthViewModel
+import com.example.mlkitapp.ui.authentication.utils.Email
+import com.example.mlkitapp.ui.authentication.utils.EmptyEmail
+import com.example.mlkitapp.ui.common.OutlinedTextValidation
+import com.example.mlkitapp.ui.main.nav.routes.NAV_LOGIN
+import com.example.mlkitapp.ui.main.nav.routes.NAV_MAIN_SCREEN
+import com.example.mlkitapp.ui.main.nav.routes.NAV_SIGNUP
 import kotlinx.coroutines.launch
 
 
@@ -78,26 +85,13 @@ fun RegistrationScreen(viewModel: AuthViewModel, navController: NavHostControlle
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(24.dp),
-                verticalArrangement = Arrangement.spacedBy(18.dp),
+                verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 content = {
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .onFocusEvent {
-                                if (it.isFocused) {
-                                    coroutineScope.launch {
-                                        bringIntoViewRequester.bringIntoView()
-                                    }
-                                }
-                            },
-                        value = email,
-                        label = {
-                            Text(text = "Email")
-                        },
-                        onValueChange = {
-                            email = it
-                        }
+
+                    OutlinedTextValidation(
+                        name = "Email",
+                        inputValidators = listOf(Email(), EmptyEmail())
                     )
 
                     OutlinedTextField(
@@ -110,6 +104,29 @@ fun RegistrationScreen(viewModel: AuthViewModel, navController: NavHostControlle
                                     }
                                 }
                             },
+                        shape = RoundedCornerShape(55),
+                        value = email,
+                        label = {
+                            Text(text = "Email")
+                        },
+                        onValueChange = {
+                            email = it
+                        },
+                        //error = "Field cannot be empty!"
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .onFocusEvent {
+                                if (it.isFocused) {
+                                    coroutineScope.launch {
+                                        bringIntoViewRequester.bringIntoView()
+                                    }
+                                }
+                            },
+                        shape = RoundedCornerShape(55),
                         value = password,
                         label = {
                             Text(text = "Password")
@@ -126,20 +143,23 @@ fun RegistrationScreen(viewModel: AuthViewModel, navController: NavHostControlle
                                 IconButton(onClick = { showPassword = false }) {
                                     Icon(
                                         painterResource(id = R.drawable.ic_visibility),
-                                        contentDescription = "visibility icon"
+                                        contentDescription = "visibility icon",
+                                        tint = MaterialTheme.colors.primaryVariant
                                     )
                                 }
                             } else {
                                 IconButton(onClick = { showPassword = true }) {
                                     Icon(
                                         painterResource(id = R.drawable.ic_visibility_off),
-                                        contentDescription = "visibility off icon"
+                                        contentDescription = "visibility off icon",
+                                        tint = MaterialTheme.colors.primaryVariant
                                     )
                                 }
                             }
                         },
 
                     )
+                    Spacer(modifier = Modifier.height(24.dp))
 
                     OutlinedTextField(
                         modifier = Modifier
@@ -151,6 +171,7 @@ fun RegistrationScreen(viewModel: AuthViewModel, navController: NavHostControlle
                                     }
                                 }
                             },
+                        shape = RoundedCornerShape(55),
                         value = confirmedPassword,
                         label = {
                             Text(text = "Confirm password")
@@ -167,14 +188,16 @@ fun RegistrationScreen(viewModel: AuthViewModel, navController: NavHostControlle
                                 IconButton(onClick = { showConfirmPassword = false }) {
                                     Icon(
                                         painterResource(id = R.drawable.ic_visibility),
-                                        contentDescription = "visibility icon"
+                                        contentDescription = "visibility icon",
+                                        tint = MaterialTheme.colors.primaryVariant
                                     )
                                 }
                             } else {
                                 IconButton(onClick = { showConfirmPassword = true }) {
                                     Icon(
                                         painterResource(id = R.drawable.ic_visibility_off),
-                                        contentDescription = "visibility off icon"
+                                        contentDescription = "visibility off icon",
+                                        tint = MaterialTheme.colors.primaryVariant
                                     )
                                 }
                             }
@@ -186,18 +209,41 @@ fun RegistrationScreen(viewModel: AuthViewModel, navController: NavHostControlle
                         )
                     )
 
+                    Spacer(modifier = Modifier.height(40.dp))
+
                     Button(
                         modifier = Modifier
-                            .width(160.dp)
-                            .height(50.dp),
+                            .fillMaxWidth()
+                            .height(40.dp),
+                            //.padding(top = 16.dp),
                         enabled = email.isNotEmpty() && password.isNotEmpty() && password == confirmedPassword,
                         content = {
-                            Text(text = "Registration")
+                            Text(
+                                text = "REGISTRATION"
+                            )
                         },
                         onClick = {
                             viewModel.signup(email.trim(), email.trim())
                         },
-                        shape = RoundedCornerShape(45)
+                        shape = RoundedCornerShape(55),
+                        border = BorderStroke(2.dp, MaterialTheme.colors.primaryVariant)
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    OutlinedButton(
+                        modifier = Modifier
+                            .wrapContentSize(),
+                        content = {
+                            Text(text = "CANCEL")
+                        },
+                        onClick = {
+                            navController.navigate(NAV_LOGIN) {
+                                popUpTo(NAV_SIGNUP) { inclusive = true }
+                            }
+                        },
+                        shape = RoundedCornerShape(55),
+                        border = BorderStroke(2.dp, MaterialTheme.colors.primaryVariant)
                     )
                     signupFlow.value?.let {
                         when (it) {
@@ -207,13 +253,12 @@ fun RegistrationScreen(viewModel: AuthViewModel, navController: NavHostControlle
                             Resource.Loading -> {
                                 CircularProgressIndicator(
                                     modifier = Modifier
-                                        .size(10.dp)
+                                        .size(10.dp),
+                                    color = MaterialTheme.colors.primaryVariant
                                 )
                             }
                             is Resource.Success -> {
-                                LaunchedEffect(Unit) {
-                                    context.startActivity(Intent(context, MainActivity::class.java))
-                                }
+                                navController.navigate(NAV_MAIN_SCREEN)
                             }
                         }
                     }

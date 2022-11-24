@@ -1,11 +1,11 @@
 package com.example.mlkitapp.ui.authentication.screens
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -53,12 +53,15 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.mlkitapp.R
 import com.example.mlkitapp.data.Resource
 import com.example.mlkitapp.ui.authentication.AuthViewModel
-import com.example.mlkitapp.ui.main.MainActivity
+import com.example.mlkitapp.ui.common.ChangePasswordAlertDialog
 import com.example.mlkitapp.ui.main.nav.routes.NAV_LOGIN
+import com.example.mlkitapp.ui.main.nav.routes.NAV_MAIN_SCREEN
 import com.example.mlkitapp.ui.main.nav.routes.NAV_SIGNUP
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -78,12 +81,16 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
     val loginFlow = viewModel.loginFlow.collectAsState()
     val loginWithCredentialsFlow = viewModel.credentialLoginFlow.collectAsState()
 
+    val token = stringResource(R.string.client_secret)
+
     val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val bringIntoViewRequester = BringIntoViewRequester()
     val context = LocalContext.current
 
     var showPassword by remember { mutableStateOf(false) }
+
+    var showDialog by remember { mutableStateOf(false) }
 
     val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {
         val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
@@ -92,22 +99,21 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
             val credential = GoogleAuthProvider.getCredential(account.idToken!!, null)
             viewModel.loginWithCreds(credential)
         } catch (e: ApiException) {
-            Log.e("TAG", e.toString())
-
-            Log.e("TAG", e.message.toString())
+            Log.e("Bejelentkezes", e.message.toString())
         }
     }
 
     Scaffold(
-        scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState)
+        scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(18.dp),
+            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -118,6 +124,7 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
                             }
                         }
                     },
+                shape = RoundedCornerShape(55),
                 value = userEmail,
                 label = {
                     Text(text = "Email")
@@ -127,6 +134,8 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
                 }
             )
 
+            Spacer(modifier = Modifier.height(24.dp))
+
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -137,6 +146,7 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
                             }
                         }
                     },
+                shape = RoundedCornerShape(55),
                 value = userPassword,
                 label = {
                     Text(text = "Password")
@@ -160,44 +170,63 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
                         IconButton(onClick = { showPassword = false }) {
                             Icon(
                                 painterResource(id = R.drawable.ic_visibility),
-                                contentDescription = "visibility icon"
+                                contentDescription = "visibility icon",
+                                tint = MaterialTheme.colors.primaryVariant
                             )
                         }
                     } else {
                         IconButton(onClick = { showPassword = true }) {
                             Icon(
                                 painterResource(id = R.drawable.ic_visibility_off),
-                                contentDescription = "visibility off icon"
+                                contentDescription = "visibility off icon",
+                                tint = MaterialTheme.colors.primaryVariant
                             )
                         }
                     }
                 }
             )
 
+            Spacer(modifier = Modifier.height(36.dp))
+
             Button(
                 modifier = Modifier
-                    .width(120.dp)
-                    .height(50.dp),
+                    .fillMaxWidth()
+                    .height(40.dp),
                 enabled = userEmail.isNotEmpty() && userPassword.isNotEmpty(),
                 content = {
-                    Text(text = "Login")
+                    Text(text = "LOGIN")
                 },
                 onClick = {
                     viewModel.login(userEmail.trim(), userPassword.trim())
+                    Log.i("user", userEmail + userPassword)
                 },
-                shape = RoundedCornerShape(45)
+                shape = RoundedCornerShape(55),
+                border = BorderStroke(2.dp, MaterialTheme.colors.primaryVariant)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        showDialog = !showDialog
+                    },
+                color = MaterialTheme.colors.secondary,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.caption,
+                text = "DID YOU FORGET YOUR PASSWORD?"
+            )
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            Text(
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.caption,
-                text = "Login with"
+                text = "LOGIN WITH"
             )
-
-            val token = stringResource(R.string.client_secret)
+            Spacer(modifier = Modifier.height(8.dp))
 
             Row {
                 IconButton(
@@ -248,18 +277,33 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
 
             }
 
+            Spacer(modifier = Modifier.height(36.dp))
+
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable {
-                        navController.navigate(NAV_SIGNUP) {
-                            popUpTo(NAV_LOGIN) { inclusive = true }
-                        }
-                    }
                     .bringIntoViewRequester(bringIntoViewRequester),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.caption,
-                text = "If you do not have an account, click here to sign up!"
+                text = "If you do not have an account, sign up!"
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(40.dp),
+                content = {
+                    Text(text = "REGISTRATE")
+                },
+                onClick = {
+                    navController.navigate(NAV_SIGNUP) {
+                        popUpTo(NAV_LOGIN) { inclusive = true }
+
+                    }
+                },
+                shape = RoundedCornerShape(55)
             )
 
             loginFlow.value.let { emailLogin ->
@@ -269,13 +313,14 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
                     }
                     is Resource.Success -> {
                         LaunchedEffect(Unit) {
-                            context.startActivity(Intent(context, MainActivity::class.java))
+                            navController.navigate(NAV_MAIN_SCREEN)
                         }
                     }
                     is Resource.Loading -> {
                         CircularProgressIndicator(
                             modifier = Modifier
                                 .size(10.dp)
+
                         )
                     }
                     else -> loginWithCredentialsFlow.value?.let {
@@ -284,19 +329,26 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
                                 Toast.makeText(context, it.exception.message, Toast.LENGTH_LONG).show()
                             }
                             is Resource.Success -> {
-                                LaunchedEffect(Unit) {
-                                    context.startActivity(Intent(context, MainActivity::class.java))
-                                }
+                                navController.navigate(NAV_MAIN_SCREEN)
                             }
                             else -> {
                                 CircularProgressIndicator(
                                     modifier = Modifier
-                                        .size(10.dp)
+                                        .size(10.dp),
+                                    color = MaterialTheme.colors.primaryVariant
                                 )
                             }
                         }
                     }
                 }
+            }
+
+            if(showDialog){
+                ChangePasswordAlertDialog(
+                    onDismiss = { showDialog = !showDialog },
+                    context = context,
+                    authViewModel = viewModel
+                )
             }
         }
     }
@@ -305,5 +357,5 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
 @Preview
 @Composable
 fun LoginScreenPreview(){
-
+    LoginScreen(viewModel = hiltViewModel(), navController = rememberNavController())
 }

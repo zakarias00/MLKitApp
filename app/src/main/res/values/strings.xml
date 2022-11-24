@@ -2,8 +2,12 @@
     <string name="app_name">MLKitApp</string>
 
     <string name="client_secret">350873722416-nkkpua2ka87gkcb1bk5f265ueas4c9vf.apps.googleusercontent.com</string>
+    <string name="fb_app_id">843607933654556</string>
+    <string name="fb_login_protocol_scheme">fb843607933654556</string>
+    <string name="fb_client_token">25550070099ece407dd922f979fcd7c5</string>
 
     <string name="home">Home</string>
+    <string name="profile">Profile</string>
     <string name="saved">Saved</string>
     <string name="map">Map</string>
     <string name="gallery">Gallery</string>
@@ -24,4 +28,15 @@
     <string name="camera_permission_disabled_button">Go to settings</string>
     <string name="title_activity_firebase">FirebaseActivity</string>
     <string name="title_activity_profile">ProfileActivity</string>
+
+    <string name="account">Account</string>
+    <string name="account_sub_title">Manage your account</string>
+    <string name="saved_sub_title">Your saved recognized texts</string>
+    <string name="settings">Settings</string>
+    <string name="settings_sub_title">Various app settings options</string>
+    <string name="logout">Logout</string>
+    <string name="logout_sub_title">Logout from your account</string>
+    <string name="title_activity_map">MapActivity</string>
+
+    <string name="empty"> </string>
 </resources>
