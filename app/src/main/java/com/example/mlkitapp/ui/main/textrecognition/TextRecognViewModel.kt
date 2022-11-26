@@ -1,9 +1,5 @@
 package com.example.mlkitapp.ui.main.textrecognition
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mlkitapp.data.Resource
@@ -38,44 +34,6 @@ class TextRecognViewModel @Inject constructor(
             .flowOn(Dispatchers.IO)
             .collect{
                 _recognizedTextFlow.value = Resource.Success(it)
-               //imageBitmap.drawWithRectangle(it.textBlocks)
             }
     }
-
-
-    fun Bitmap.drawWithRectangle(textBlocks: List<Text.TextBlock>): Bitmap?{
-        val bitmap = copy(config, true)
-        val canvas = Canvas(bitmap)
-        for (i in textBlocks) {
-            val lines = i.lines
-            for (j in lines) {
-                val elements = j.elements
-                for (k in elements) {
-
-                    val bounds = k.boundingBox
-                    Paint().apply {
-                        color = Color.RED
-                        style = Paint.Style.STROKE
-                        strokeWidth = 4.0f
-                        isAntiAlias = true
-                        // draw rectangle on canvas
-                        if (bounds != null) {
-                            canvas.drawRect(
-                                bounds,
-                                this
-                            )
-
-//                        canvas.drawText(thisLabel.toString(),
-//                            bounds.left.toFloat(),
-//                            bounds.top.toFloat(), this)
-//                        }
-                        }
-                    }
-                }
-            }
-        }
-        return bitmap
-    }
-
-
 }

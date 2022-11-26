@@ -28,7 +28,7 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun MainActivityScreen(){
+fun MainScreen(){
 
     val multiplePermissionState = rememberMultiplePermissionsState(
         permissions = listOf(

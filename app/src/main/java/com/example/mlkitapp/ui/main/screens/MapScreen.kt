@@ -45,7 +45,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 @OptIn(InternalComposeApi::class)
 @SuppressLint("MissingPermission")
 @Composable
-fun MaScreen(
+fun MapScreen(
     dbViewModel: CloudDbViewModel
 ) {
     val context = LocalContext.current
@@ -168,12 +168,6 @@ fun MaScreen(
             }
         }
     }
-
-//    if(showDialog) {
-//        MarkerInfoWindow(
-//            title = "szia"
-//        )
-//    }
 }
 
 private fun isNearBy(current: Location, cloud: LatLng): Boolean{

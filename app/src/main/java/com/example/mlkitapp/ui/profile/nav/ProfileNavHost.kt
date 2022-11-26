@@ -24,7 +24,7 @@ import com.example.mlkitapp.ui.main.nav.routes.NAV_SAVED
 import com.example.mlkitapp.ui.main.screens.TextToSpeechViewModel
 import com.example.mlkitapp.ui.profile.ProfileNavItemsUi
 import com.example.mlkitapp.ui.profile.screens.AccountManagerScreen
-import com.example.mlkitapp.ui.profile.screens.MapScreen
+import com.example.mlkitapp.ui.profile.screens.ClickedItemMapScreen
 import com.example.mlkitapp.ui.profile.screens.SavedScreen
 import com.example.mlkitapp.ui.profile.screens.SettingsScreen
 import com.example.mlkitapp.ui.profile.screens.TextInfoScreen
@@ -77,7 +77,7 @@ fun ProfileNavHost(
         }
         composable(NAV_CLICKED_ITEM_OPEN_MAP){
             TopBarTitleUtils.changeTitle(R.string.empty)
-            MapScreen()
+            ClickedItemMapScreen()
         }
     }
 }

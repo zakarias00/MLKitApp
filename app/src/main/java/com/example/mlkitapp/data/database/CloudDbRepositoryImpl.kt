@@ -83,7 +83,7 @@ class CloudDbRepositoryImpl @Inject constructor(
 
     override suspend fun saveDocumentAndImage(uId: String, title: String, recText: String, lat: Double, long: Double, private: Boolean, imageUri: Uri) = callbackFlow {
         val currentDate = Date().time
-        val storageReference = storage.reference.child("images")
+        val storageReference = storage.reference.child("images").child("${uId+currentDate}.jpg")
         storageReference.putFile(imageUri).addOnSuccessListener {
             storageReference.downloadUrl.addOnSuccessListener { url ->
                 val documentId = dbReference.document().id
