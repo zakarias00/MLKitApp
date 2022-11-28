@@ -41,185 +41,239 @@ fun SettingsScreen(
     val context = LocalContext.current
 
     Column(
-            Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.height(18.dp))
+        Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.height(18.dp))
             
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    onOpenSettingsClick(context)
+                }
+                .padding(all = 18.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                modifier = Modifier.size(32.dp),
+                imageVector = Icons.Default.Info,
+                contentDescription = "Info icon",
+                tint = MaterialTheme.colors.primaryVariant
+            )
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        onOpenSettingsClick(context)
-                    }
-                    .padding(all = 18.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Icon(
-                    modifier = Modifier.size(32.dp),
-                    imageVector = Icons.Default.Info,
-                    contentDescription = "Info icon",
-                    tint = MaterialTheme.colors.primaryVariant
-                )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
-                    Column(
-                        modifier = Modifier
-                            .weight(weight = 3f, fill = false)
-                            .padding(start = 16.dp)
-                    ) {
-
-                        Text(
-                            text = "App information",
-                            style = TextStyle(
-                                fontSize = 18.sp,
-                            )
-                        )
-
-                        Spacer(Modifier.height(2.dp))
-
-                        Text(
-                            text = "General application information",
-                            style = TextStyle(
-                                fontSize = 14.sp,
-                                letterSpacing = (0.8).sp,
-                                color = Color.Gray
-                            )
-                        )
-
-                    }
-
-                    Icon(
-                        modifier = Modifier
-                            .weight(weight = 0.5f, fill = false),
-                        imageVector = Icons.Outlined.ArrowForward,
-                        contentDescription = "Arrow-forward icon"
-                    )
-                }
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        onOpenAccessibilitySettingsClick(context)
-                    }
-                    .padding(18.dp),
-                verticalAlignment = Alignment.CenterVertically,
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
 
-
-                Icon(
-                    modifier = Modifier.size(32.dp),
-                    painter = painterResource(R.drawable.ic_accessibility),
-                    contentDescription = "Accessibility icon",
-                    tint = MaterialTheme.colors.primaryVariant
-                )
-                Row(
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                        .weight(weight = 3f, fill = false)
+                        .padding(start = 16.dp)
                 ) {
 
-                    Column(
-                        modifier = Modifier
-                            .weight(weight = 3f, fill = false)
-                            .padding(start = 16.dp)
-                    ) {
-
-                        Text(
-                            text = "Accessibility settings",
-                            style = TextStyle(
-                                fontSize = 18.sp
-                            )
+                    Text(
+                        text = "App information",
+                        style = TextStyle(
+                            fontSize = 18.sp,
                         )
-
-                        Spacer(Modifier.height(2.dp))
-
-                        Text(
-                            text = "Control your application's accessibility",
-                            style = TextStyle(
-                                fontSize = 14.sp,
-                                letterSpacing = (0.8).sp,
-                                color = Color.Gray
-                            )
-                        )
-                    }
-
-                    Icon(
-                        modifier = Modifier
-                            .weight(weight = 0.5f, fill = false),
-                        imageVector = Icons.Outlined.ArrowForward,
-                        contentDescription = "Arrow-forward icon"
                     )
+
+                    Spacer(Modifier.height(2.dp))
+
+                    Text(
+                        text = "General application information",
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            letterSpacing = (0.8).sp,
+                            color = Color.Gray
+                        )
+                    )
+
                 }
 
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        onOpenLocationSettingsClick(context)
-                    }
-                    .padding(18.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
                 Icon(
-                    modifier = Modifier.size(32.dp),
-                    painter = painterResource(R.drawable.ic_locations),
-                    contentDescription = "Location icon",
-                    tint = MaterialTheme.colors.primaryVariant
-                )
-
-                Row(
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .weight(weight = 3f, fill = false)
-                            .padding(start = 16.dp)
-                    ) {
-                        Text(
-                            text = "Location settings",
-                            style = TextStyle(
-                                fontSize = 18.sp
-                            )
-                        )
-                        Spacer(Modifier.height(2.dp))
-
-                        Text(
-                            text = "Control your application's location settings",
-                            style = TextStyle(
-                                fontSize = 14.sp,
-                                letterSpacing = (0.8).sp,
-                                color = Color.Gray
-                            )
-                        )
-                    }
-
-                    Icon(
-                        modifier = Modifier
-                            .weight(weight = 0.5f, fill = false),
-                        imageVector = Icons.Outlined.ArrowForward,
-                        contentDescription = "Arrow-forward icon"
-                    )
-                }
+                        .weight(weight = 0.5f, fill = false),
+                    imageVector = Icons.Outlined.ArrowForward,
+                    contentDescription = "Arrow-forward icon"
+                )
             }
         }
-   // }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    onOpenAccessibilitySettingsClick(context)
+                }
+                .padding(18.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+
+
+            Icon(
+                modifier = Modifier.size(32.dp),
+                painter = painterResource(R.drawable.ic_accessibility),
+                contentDescription = "Accessibility icon",
+                tint = MaterialTheme.colors.primaryVariant
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Column(
+                    modifier = Modifier
+                        .weight(weight = 3f, fill = false)
+                        .padding(start = 16.dp)
+                ) {
+
+                    Text(
+                        text = "Accessibility settings",
+                        style = TextStyle(
+                            fontSize = 18.sp
+                        )
+                    )
+
+                    Spacer(Modifier.height(2.dp))
+
+                    Text(
+                        text = "Control your application's accessibility",
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            letterSpacing = (0.8).sp,
+                            color = Color.Gray
+                        )
+                    )
+                }
+
+                Icon(
+                    modifier = Modifier
+                        .weight(weight = 0.5f, fill = false),
+                    imageVector = Icons.Outlined.ArrowForward,
+                    contentDescription = "Arrow-forward icon"
+                )
+            }
+
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    onOpenLocationSettingsClick(context)
+                }
+                .padding(18.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                modifier = Modifier.size(32.dp),
+                painter = painterResource(R.drawable.ic_locations),
+                contentDescription = "Location icon",
+                tint = MaterialTheme.colors.primaryVariant
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = Modifier
+                        .weight(weight = 3f, fill = false)
+                        .padding(start = 16.dp)
+                ) {
+                    Text(
+                        text = "Location settings",
+                        style = TextStyle(
+                            fontSize = 18.sp
+                        )
+                    )
+                    Spacer(Modifier.height(2.dp))
+
+                    Text(
+                        text = "Control your application's location settings",
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            letterSpacing = (0.8).sp,
+                            color = Color.Gray
+                        )
+                    )
+                }
+
+                Icon(
+                    modifier = Modifier
+                        .weight(weight = 0.5f, fill = false),
+                    imageVector = Icons.Outlined.ArrowForward,
+                    contentDescription = "Arrow-forward icon"
+                )
+            }
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    onOpenLocationSettingsClick(context)
+                }
+                .padding(18.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                modifier = Modifier.size(32.dp),
+                painter = painterResource(R.drawable.ic_talk_back),
+                contentDescription = "Talkback icon",
+                tint = MaterialTheme.colors.primaryVariant
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = Modifier
+                        .weight(weight = 3f, fill = false)
+                        .padding(start = 16.dp)
+                ) {
+                    Text(
+                        text = "Talkback settings",
+                        style = TextStyle(
+                            fontSize = 18.sp
+                        )
+                    )
+                    Spacer(Modifier.height(2.dp))
+
+                    Text(
+                        text = "Control your application's talkback audio settings",
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            letterSpacing = (0.8).sp,
+                            color = Color.Gray
+                        )
+                    )
+                }
+
+                Icon(
+                    modifier = Modifier
+                        .weight(weight = 0.5f, fill = false),
+                    imageVector = Icons.Outlined.ArrowForward,
+                    contentDescription = "Arrow-forward icon"
+                )
+            }
+        }
+    }
+
 }
 
 

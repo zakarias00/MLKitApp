@@ -1,17 +1,20 @@
 package com.example.mlkitapp.ui.main.screens
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Bitmap
 import android.location.Location
 import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -21,18 +24,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.FilterQuality
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.example.mlkitapp.R
 import com.example.mlkitapp.data.Resource
 import com.example.mlkitapp.data.models.RecognizedText
 import com.example.mlkitapp.data.utils.LocationUtils
 import com.example.mlkitapp.data.utils.LocationUtils.fusedLocationProviderClient
 import com.example.mlkitapp.ui.main.db.CloudDbViewModel
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -70,11 +78,13 @@ fun MapScreen(
             locationResult.lastLocation?.let { location ->
                 currentLocation = location
                 cameraPositionState.position = CameraPosition.fromLatLngZoom(
-                    LocationUtils.getPosition(location), 12f)
+                    LocationUtils.getPosition(location), 18f)
             }
         }
         requestLocationUpdate = false
     }
+
+    val mapIcon = bitmapDescriptorFromVector(context, R.drawable.ic_locations_48dp)
 
     GoogleMap(
         cameraPositionState = cameraPositionState,
@@ -90,67 +100,72 @@ fun MapScreen(
                             item.longitude
                         )
                     ),
-                    //snippet =
-//                    onInfoWindowClick = {
-//                        showDialog = !showDialog
-//                    },
-                    //title = item.title
+                    icon = mapIcon
                 ){
-                    Card(
-                        modifier = Modifier.wrapContentSize(),
-                        shape = RoundedCornerShape(25.dp),
-                        border = BorderStroke(4.dp, MaterialTheme.colors.primary)
+
+                    Box(
+                        modifier = Modifier
+                            .padding(32.dp)
+                            .background(
+                                color = MaterialTheme.colors.onPrimary,
+                                shape = RoundedCornerShape(35.dp)
+                            )
+                            ,
                     ) {
                         Column(
-                            modifier = Modifier
-                                .padding(24.dp)
-                                .wrapContentSize(),
-                            verticalArrangement = Arrangement.Center
+                            modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text(
-                                item.title.toString()
-                            )
-
-                            Text(
-                                item.recognizedText.toString()
-                            )
 
                             if (item.imageUri != null) {
                                 Image(
-                                    rememberAsyncImagePainter(model = ImageRequest.Builder(context)
-                                        .crossfade(false)
+                                    rememberAsyncImagePainter(
+                                        model = ImageRequest.Builder(LocalContext.current)
                                         .data(item.imageUri)
+                                        .crossfade(false)
+                                        .allowHardware(false)
                                         .build(),
                                         filterQuality = FilterQuality.High),
-                                    contentDescription = "Taken image",
-                                    contentScale = ContentScale.Crop,
+                                    contentDescription = null,
                                     modifier = Modifier
-                                        .wrapContentSize()
-                                        .padding(16.dp)
+                                        .height(80.dp)
+                                        .fillMaxWidth(),
                                 )
                             }
-                            }
+
+                            Spacer(modifier = Modifier.height(16.dp))
+
+                            Text(
+                                text = item.title.toString(),
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                style = MaterialTheme.typography.h6,
+                                color = MaterialTheme.colors.primary,
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Text(
+                                text = item.recognizedText.toString(),
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier
+                                    .padding(horizontal = 25.dp)
+                                    .fillMaxWidth(),
+                                style = MaterialTheme.typography.body1,
+                                color = MaterialTheme.colors.primary,
+                            )
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
                         }
+
                     }
+
                 }
-
-
-//                MarkerInfoWindowContent(
-//                    state = MarkerState(
-//                        position = LatLng(
-//                            item.latitude,
-//                            item.longitude
-//                        )
-//                    ),
-//                    onInfoWindowClick = {
-//                        showDialog = !showDialog
-//                    },
-//                    title = item.title
-//                )
             }
+
         }
-
-
+    }
 
     textsFlow.let { texts ->
         when (texts) {
@@ -177,4 +192,21 @@ private fun isNearBy(current: Location, cloud: LatLng): Boolean{
 
     val distance = current.distanceTo(cloudLocation)
     return distance < 2000.0
+}
+
+
+fun bitmapDescriptorFromVector(
+    context: Context,
+    vectorResId: Int
+): BitmapDescriptor? {
+    val drawable = ContextCompat.getDrawable(context, vectorResId) ?: return null
+    drawable.setBounds(10, 10, drawable.intrinsicWidth, drawable.intrinsicHeight)
+    val bm = Bitmap.createBitmap(
+        drawable.intrinsicWidth,
+        drawable.intrinsicHeight,
+        Bitmap.Config.ARGB_8888
+    )
+    val canvas = android.graphics.Canvas(bm)
+    drawable.draw(canvas)
+    return BitmapDescriptorFactory.fromBitmap(bm)
 }

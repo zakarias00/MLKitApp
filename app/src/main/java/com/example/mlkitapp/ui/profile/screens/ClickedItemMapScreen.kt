@@ -9,8 +9,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.example.mlkitapp.R
 import com.example.mlkitapp.data.utils.SharedObject
+import com.example.mlkitapp.ui.main.screens.bitmapDescriptorFromVector
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -32,6 +35,8 @@ fun ClickedItemMapScreen() {
         position = CameraPosition.fromLatLngZoom(clickedItemPos, 12f)
     }
 
+    val mapIcon = bitmapDescriptorFromVector(LocalContext.current, R.drawable.ic_locations_48dp)
+
     val uiSettings by remember { mutableStateOf(MapUiSettings()) }
     val properties by remember { mutableStateOf(MapProperties()) }
 
@@ -48,6 +53,7 @@ fun ClickedItemMapScreen() {
             Marker(
                 state = clickedItemState,
                 title = clickedItem.title,
+                icon = mapIcon
             )
         }
     }

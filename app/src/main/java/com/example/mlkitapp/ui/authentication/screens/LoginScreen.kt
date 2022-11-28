@@ -1,7 +1,7 @@
 package com.example.mlkitapp.ui.authentication.screens
 
 import android.annotation.SuppressLint
-import android.util.Log
+import android.content.Context
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -39,6 +39,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,11 +52,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.mlkitapp.R
 import com.example.mlkitapp.data.Resource
 import com.example.mlkitapp.ui.authentication.AuthViewModel
@@ -63,6 +62,7 @@ import com.example.mlkitapp.ui.common.ChangePasswordAlertDialog
 import com.example.mlkitapp.ui.main.nav.routes.NAV_LOGIN
 import com.example.mlkitapp.ui.main.nav.routes.NAV_MAIN_SCREEN
 import com.example.mlkitapp.ui.main.nav.routes.NAV_SIGNUP
+import com.example.mlkitapp.ui.main.screens.TextToSpeechViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -72,14 +72,29 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
+fun LoginScreen(
+    authViewModel: AuthViewModel,
+    navController: NavController,
+    textToSpeechViewModel: TextToSpeechViewModel = viewModel(),
+) {
 
     var userEmail by remember { mutableStateOf("") }
     var userPassword by remember { mutableStateOf("") }
 
+    var isEmailFieldEmpty by rememberSaveable { mutableStateOf(false) }
+    var isPasswordFieldEmpty by rememberSaveable { mutableStateOf(false) }
+
+    fun validateEmail(text: String){
+        isEmailFieldEmpty = text.isEmpty()
+    }
+
+    fun validatePassword(text: String) {
+        isPasswordFieldEmpty = text.isEmpty()
+    }
+
     val snackbarHostState = remember { SnackbarHostState() }
-    val loginFlow = viewModel.loginFlow.collectAsState()
-    val loginWithCredentialsFlow = viewModel.credentialLoginFlow.collectAsState()
+    val loginFlow = authViewModel.loginFlow.collectAsState()
+    val loginWithCredentialsFlow = authViewModel.credentialLoginFlow.collectAsState()
 
     val token = stringResource(R.string.client_secret)
 
@@ -97,9 +112,9 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
         try {
             val account = task.getResult(ApiException::class.java)!!
             val credential = GoogleAuthProvider.getCredential(account.idToken!!, null)
-            viewModel.loginWithCreds(credential)
+            authViewModel.loginWithCreds(credential)
         } catch (e: ApiException) {
-            Log.e("Bejelentkezes", e.message.toString())
+            Toast.makeText(context, e.message.toString(), Toast.LENGTH_LONG).show()
         }
     }
 
@@ -110,9 +125,18 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(24.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.Start
         ) {
+
+            Icon(
+                painterResource(id = R.drawable.ic_logo),
+                contentDescription = stringResource(id = R.string.logout),
+                modifier = Modifier
+                    .size(160.dp)
+                    .padding(24.dp)
+                    .align(Alignment.CenterHorizontally)
+            )
 
             OutlinedTextField(
                 modifier = Modifier
@@ -127,12 +151,31 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
                 shape = RoundedCornerShape(55),
                 value = userEmail,
                 label = {
-                    Text(text = "Email")
+                    Text(
+                        text = stringResource(id = R.string.email_field_label)
+                    )
                 },
                 onValueChange = {
                     userEmail = it
-                }
+                    validateEmail(it)
+                    if(isEmailFieldEmpty){
+                        textToSpeechViewModel.textToSpeech(context, getString(context, R.string.empty_email_field))
+                    }
+                },
+                singleLine = true,
+                isError = isEmailFieldEmpty,
+                keyboardActions = KeyboardActions {
+                    focusManager.clearFocus()
+                },
             )
+            if(isEmailFieldEmpty){
+                Text(
+                    text = stringResource(id = R.string.empty_email_field),
+                    color = MaterialTheme.colors.error,
+                    style = MaterialTheme.typography.body2,
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -146,31 +189,36 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
                             }
                         }
                     },
+                isError = isPasswordFieldEmpty,
                 shape = RoundedCornerShape(55),
                 value = userPassword,
                 label = {
-                    Text(text = "Password")
+                    Text(
+                        text = stringResource(id = R.string.password_field_label)
+                    )
                 },
                 onValueChange = {
                     userPassword = it
-                },
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        focusManager.clearFocus()
+                    validatePassword(it)
+                    if(isPasswordFieldEmpty){
+                        textToSpeechViewModel.textToSpeech(context, getString(context, R.string.empty_password_field))
                     }
-                ),
+                },
+                keyboardActions = KeyboardActions {
+                    focusManager.clearFocus()
+                },
+                singleLine = true,
                 visualTransformation = if (showPassword) {
                     VisualTransformation.None
                 } else {
                     PasswordVisualTransformation()
                 },
                 trailingIcon = {
-
                     if (showPassword) {
                         IconButton(onClick = { showPassword = false }) {
                             Icon(
                                 painterResource(id = R.drawable.ic_visibility),
-                                contentDescription = "visibility icon",
+                                contentDescription = stringResource(id = R.string.visibility_icon),
                                 tint = MaterialTheme.colors.primaryVariant
                             )
                         }
@@ -178,13 +226,21 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
                         IconButton(onClick = { showPassword = true }) {
                             Icon(
                                 painterResource(id = R.drawable.ic_visibility_off),
-                                contentDescription = "visibility off icon",
+                                contentDescription = stringResource(id = R.string.visibility_off_icon),
                                 tint = MaterialTheme.colors.primaryVariant
                             )
                         }
                     }
                 }
             )
+            if(isPasswordFieldEmpty){
+                Text(
+                    text = stringResource(id = R.string.empty_password_field),
+                    color = MaterialTheme.colors.error,
+                    style = MaterialTheme.typography.body2,
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.height(36.dp))
 
@@ -194,11 +250,12 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
                     .height(40.dp),
                 enabled = userEmail.isNotEmpty() && userPassword.isNotEmpty(),
                 content = {
-                    Text(text = "LOGIN")
+                    Text(
+                        text = stringResource(id = R.string.login_button_text)
+                    )
                 },
                 onClick = {
-                    viewModel.login(userEmail.trim(), userPassword.trim())
-                    Log.i("user", userEmail + userPassword)
+                    authViewModel.login(userEmail.trim(), userPassword.trim())
                 },
                 shape = RoundedCornerShape(55),
                 border = BorderStroke(2.dp, MaterialTheme.colors.primaryVariant)
@@ -215,7 +272,7 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
                 color = MaterialTheme.colors.secondary,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.caption,
-                text = "DID YOU FORGET YOUR PASSWORD?"
+                text = stringResource(id = R.string.forgotten_password_button_text)
             )
 
             Spacer(modifier = Modifier.height(40.dp))
@@ -224,7 +281,7 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.caption,
-                text = "LOGIN WITH"
+                text = stringResource(id = R.string.login_options)
             )
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -246,7 +303,7 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
                         Icon(
                             painterResource(id = R.drawable.icon_google),
                             tint = Color.Unspecified,
-                            contentDescription = "Google authentication",
+                            contentDescription = stringResource(id = R.string.google_icon)
                         )
                     }
 
@@ -285,7 +342,7 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
                     .bringIntoViewRequester(bringIntoViewRequester),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.caption,
-                text = "If you do not have an account, sign up!"
+                text = stringResource(id = R.string.without_account)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -295,7 +352,9 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
                     .fillMaxWidth()
                     .height(40.dp),
                 content = {
-                    Text(text = "REGISTRATE")
+                    Text(
+                        text = stringResource(id = R.string.registration_button_text)
+                    )
                 },
                 onClick = {
                     navController.navigate(NAV_SIGNUP) {
@@ -347,15 +406,14 @@ fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
                 ChangePasswordAlertDialog(
                     onDismiss = { showDialog = !showDialog },
                     context = context,
-                    authViewModel = viewModel
+                    authViewModel = authViewModel
                 )
             }
         }
     }
 }
 
-@Preview
-@Composable
-fun LoginScreenPreview(){
-    LoginScreen(viewModel = hiltViewModel(), navController = rememberNavController())
+private fun getString(context: Context, stringRes: Int): String{
+    return context.resources.getString(stringRes)
 }
+

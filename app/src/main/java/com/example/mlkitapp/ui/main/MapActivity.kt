@@ -9,6 +9,7 @@ import com.example.mlkitapp.ui.BaseActivity
 import com.example.mlkitapp.ui.main.screens.MapScreen
 import com.example.mlkitapp.ui.theme.MLKitAppTheme
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.MapsInitializer
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -17,6 +18,8 @@ class MapActivity: BaseActivity() {
     @OptIn(InternalComposeApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        MapsInitializer.initialize(applicationContext)
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         setContent {

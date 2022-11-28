@@ -2,7 +2,6 @@ package com.example.mlkitapp.ui.main.screens
 
 import android.content.Context
 import android.speech.tts.TextToSpeech
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import java.util.Locale
 
@@ -14,7 +13,6 @@ class TextToSpeechViewModel: ViewModel() {
         textToSpeech = TextToSpeech(
             context
         ) {
-            Log.i("texttospeech", it.toString())
             if (it == TextToSpeech.SUCCESS) {
                 textToSpeech.let { txtToSpeech ->
                     txtToSpeech.language = Locale.US

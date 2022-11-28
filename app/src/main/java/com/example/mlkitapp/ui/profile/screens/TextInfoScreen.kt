@@ -183,6 +183,6 @@ fun TextInfoScreen(
 }
 
 @OptIn(InternalComposeApi::class)
-fun onSwitchClick(viewModel: CloudDbViewModel, textId: String, private: Boolean): Unit{
+fun onSwitchClick(viewModel: CloudDbViewModel, textId: String, private: Boolean){
     viewModel.editDocument(textId, private)
 }

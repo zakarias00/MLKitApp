@@ -8,6 +8,7 @@ import com.example.mlkitapp.ui.BaseActivity
 import com.example.mlkitapp.ui.authentication.nav.AuthNavHost
 import com.example.mlkitapp.ui.theme.MLKitAppTheme
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.MapsInitializer
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -17,6 +18,7 @@ class FirebaseActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContent {
 
+            MapsInitializer.initialize(applicationContext)
             fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
             MLKitAppTheme {

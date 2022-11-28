@@ -45,7 +45,7 @@ fun ChangePasswordAlertDialog(
         )
     ) {
         Card(
-            shape = RoundedCornerShape(30.dp),
+            shape = RoundedCornerShape(24.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentSize()

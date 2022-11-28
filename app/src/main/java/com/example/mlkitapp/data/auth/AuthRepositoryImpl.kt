@@ -1,6 +1,5 @@
 package com.example.mlkitapp.data.auth
 
-import android.util.Log
 import com.example.mlkitapp.data.Resource
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
@@ -21,8 +20,6 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun login(email: String, password: String): Resource<FirebaseUser> {
         return try {
             val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
-            Log.i("hiba", result.toString())
-
             Resource.Success(result.user!!)
         } catch (e: Exception) {
             e.printStackTrace()

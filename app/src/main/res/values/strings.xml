@@ -1,6 +1,24 @@
 <resources>
     <string name="app_name">MLKitApp</string>
 
+    <string name="empty_email_field">The email field cannot be empty!</string>
+    <string name="wrong_email_field">The email field must contains a @ character!</string>
+    <string name="wrong_email_field_without_domain">The email field must end with a domain name!</string>
+    <string name="empty_password_field">The password field cannot be empty!</string>
+    <string name="short_password_field">The password must contain at least 8 characters!</string>
+    <string name="not_equal_passwords">The two passwords must be equals!</string>
+    <string name="email_field_label">Email</string>
+    <string name="password_field_label">Password</string>
+    <string name="password_confirm_field_label">Confirm password</string>
+
+    <string name="login_button_text">LOGIN</string>
+    <string name="forgotten_password_button_text">DID YOU FORGET YOUR PASSWORD?</string>
+    <string name="login_options">LOGIN WITH</string>
+    <string name="without_account">If you do not have an account, sign up!</string>
+    <string name="registration_button_text">REGISTRATE</string>
+    <string name="cancel_button_text">CANCEL</string>
+R
+
     <string name="client_secret">350873722416-nkkpua2ka87gkcb1bk5f265ueas4c9vf.apps.googleusercontent.com</string>
     <string name="fb_app_id">843607933654556</string>
     <string name="fb_login_protocol_scheme">fb843607933654556</string>
@@ -39,4 +57,9 @@
     <string name="title_activity_map">MapActivity</string>
 
     <string name="empty"> </string>
+
+    <string name="visibility_icon">Visibility icon</string>
+    <string name="visibility_off_icon">Visibility off icon</string>
+    <string name="google_icon">Google icon</string>
+
 </resources>
