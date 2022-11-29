@@ -47,16 +47,16 @@ class CloudDbViewModel @Inject constructor(
         }
     }
 
-    fun saveDocumentAndImage(userId: String, title: String, text: String, lat: Double, long: Double, isPrivate: Boolean, imageUri: Uri) = GlobalScope.launch{
-        repository.saveDocumentAndImage(userId, title, text, lat, long, isPrivate, imageUri)
+    fun saveDocumentAndImage(userId: String, address: String, text: String, lat: Double, long: Double, isPrivate: Boolean, imageUri: Uri) = GlobalScope.launch{
+        repository.saveDocumentAndImage(userId, address, text, lat, long, isPrivate, imageUri)
             .flowOn(Dispatchers.IO)
             .collect{
                 _saveDocumentFlow.value = it
         }
     }
 
-    fun deleteDocument(id: String) = viewModelScope.launch {
-        repository.deleteDocument(id)
+    fun deleteDocument(id: String, url: String) = viewModelScope.launch {
+        repository.deleteDocument(id, url)
             .flowOn(Dispatchers.IO)
             .collect{
                 _deleteDocumentFlow.value = it

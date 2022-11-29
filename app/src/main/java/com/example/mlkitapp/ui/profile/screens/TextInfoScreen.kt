@@ -1,7 +1,6 @@
 package com.example.mlkitapp.ui.profile.screens
 
 import android.widget.Toast
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -46,11 +45,9 @@ import com.example.mlkitapp.ui.main.nav.routes.NAV_CLICKED_ITEM_OPEN_MAP
 @OptIn(InternalComposeApi::class)
 @Composable
 fun TextInfoScreen(
-    navController: NavController?, back: () -> Unit,
+    navController: NavController?,
     dbViewModel: CloudDbViewModel = hiltViewModel()
 ){
-    BackHandler(onBack = back)
-
     val editFlow = dbViewModel.editDocumentFlow.collectAsState()
     val recognizedText = SharedPreferences.sharedRecognizedText
 
@@ -79,7 +76,7 @@ fun TextInfoScreen(
             val checkStateValue = recognizedText?.private!!
             val checkedState = remember { mutableStateOf(checkStateValue) }
 
-            val textToRead = "Post's informations: location is ${recognizedText.title.toString()}" +
+            val textToRead = "Post's information: location is ${recognizedText.address.toString()}" +
                     "Recognized text is ${recognizedText.recognizedText}" +
                     "Your post is private, you can change it, by tapping on the switch." +
                     "You can open the post in map, by clicking the button at the bottom of the screen."
@@ -92,7 +89,7 @@ fun TextInfoScreen(
             )
 
             Text(
-                text = recognizedText.title.toString(),
+                text = recognizedText.address.toString(),
                 style = MaterialTheme.typography.h6
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -151,7 +148,7 @@ fun TextInfoScreen(
         }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         Button(
             modifier = Modifier

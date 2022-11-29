@@ -1,7 +1,6 @@
 package com.example.mlkitapp.ui.profile.screens
 
 import android.content.Intent
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,10 +27,7 @@ import com.google.firebase.auth.FirebaseAuth
 @Composable
 fun AccountManagerScreen(
     authViewModel: AuthViewModel,
-    back: () -> Unit
 ) {
-    BackHandler(onBack = back)
-
     val currentUser = FirebaseAuth.getInstance().currentUser
     val context = LocalContext.current
     val provider = currentUser!!.providerData[currentUser.providerData.size - 1].providerId

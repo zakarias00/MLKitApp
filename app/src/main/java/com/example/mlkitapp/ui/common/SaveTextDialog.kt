@@ -118,7 +118,6 @@ fun SaveTextDialog(
                                 false,
                                 imageUrl
                             )
-                            //delay(2000)
                             runBlocking {
                                 onDismiss()
                             }

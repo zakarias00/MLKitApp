@@ -11,10 +11,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.mlkitapp.R
+import com.example.mlkitapp.data.utils.SharedPreferences
 import com.example.mlkitapp.data.utils.TopBarTitleUtils
 import com.example.mlkitapp.ui.authentication.AuthViewModel
 import com.example.mlkitapp.ui.authentication.FirebaseActivity
-import com.example.mlkitapp.ui.main.nav.navigateBack
 import com.example.mlkitapp.ui.main.nav.routes.NAV_CLICKED_ITEM
 import com.example.mlkitapp.ui.main.nav.routes.NAV_CLICKED_ITEM_OPEN_MAP
 import com.example.mlkitapp.ui.main.nav.routes.NAV_LOGOUT
@@ -62,55 +62,41 @@ fun ProfileNavHost(
         }
         composable(NAV_SAVED){
             TopBarTitleUtils.changeTitle(R.string.saved)
+            SharedPreferences.setCurrentNavRoute(NAV_SAVED)
+            SharedPreferences.setTargetNavRoute(NAV_PROFILE)
             SavedScreen(
                 hiltViewModel(),
-                back = {
-                    navController.navigateBack(
-                        targetRoute = NAV_PROFILE,
-                        currentRoute = NAV_SAVED
-                    )
-                },
                 navController
             )
         }
         composable(NAV_PROFILE_ACCOUNT_MANAGEMENT) {
             TopBarTitleUtils.changeTitle(R.string.account)
+            SharedPreferences.setCurrentNavRoute(NAV_PROFILE_ACCOUNT_MANAGEMENT)
+            SharedPreferences.setTargetNavRoute(NAV_PROFILE)
             AccountManagerScreen(
                 viewModel,
-                back = {
-                    navController.navigateBack(
-                        targetRoute = NAV_PROFILE,
-                        currentRoute = NAV_PROFILE_ACCOUNT_MANAGEMENT
-                    )
-                }
             )
         }
         composable(NAV_PROFILE_SETTINGS) {
             TopBarTitleUtils.changeTitle(R.string.settings)
+            SharedPreferences.setCurrentNavRoute(NAV_PROFILE_SETTINGS)
+            SharedPreferences.setTargetNavRoute(NAV_PROFILE)
             SettingsScreen(
                 navController,
-                back = {
-                    navController.navigateBack(
-                        targetRoute = NAV_PROFILE,
-                        currentRoute = NAV_PROFILE_SETTINGS
-                    )
-                }
             )
         }
         composable(NAV_CLICKED_ITEM){
             TopBarTitleUtils.changeTitle(R.string.empty)
+            SharedPreferences.setCurrentNavRoute(NAV_CLICKED_ITEM)
+            SharedPreferences.setTargetNavRoute(NAV_SAVED)
             TextInfoScreen(
                 navController,
-                back = {
-                    navController.navigateBack(
-                        targetRoute = NAV_PROFILE,
-                        currentRoute = NAV_CLICKED_ITEM
-                    )
-                }
             )
         }
         composable(NAV_CLICKED_ITEM_OPEN_MAP){
             TopBarTitleUtils.changeTitle(R.string.empty)
+            SharedPreferences.setCurrentNavRoute(NAV_CLICKED_ITEM_OPEN_MAP)
+            SharedPreferences.setTargetNavRoute(NAV_CLICKED_ITEM)
             ClickedItemMapScreen()
         }
     }

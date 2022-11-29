@@ -64,7 +64,7 @@ fun TextCard(
                 .padding(start = 16.dp)
         ) {
             Text(
-                text = recognizedText.title.toString(),
+                text = recognizedText.address.toString(),
                 style = MaterialTheme.typography.body1,
                 color = MaterialTheme.colors.onSurface,
                 modifier = Modifier.weight(2F)
@@ -75,7 +75,7 @@ fun TextCard(
             IconButton(
                 onClick = {
                     showToast = true
-                    dbViewModel.deleteDocument(recognizedText.id!!)
+                    dbViewModel.deleteDocument(recognizedText.id!!, recognizedText.imageUri!!)
                 },
                 modifier = Modifier.weight(0.5F)
             ) {
@@ -87,9 +87,8 @@ fun TextCard(
             }
         }
 
-        //Log.i("")
-        deleteFlow.value.let {
-            when (it) {
+        deleteFlow.value.let { deleteResult ->
+            when (deleteResult) {
                 is Resource.Success -> {
                     //if (showToast) {
                         Toast.makeText(context, "Successfully deleted item!", Toast.LENGTH_LONG).show()
@@ -98,7 +97,7 @@ fun TextCard(
                 }
                 is Resource.Failure -> {
                     //if (showToast) {
-                        Toast.makeText(context, it.exception.message, Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, deleteResult.exception.message, Toast.LENGTH_LONG).show()
                    // }
                     showToast = false
                 }

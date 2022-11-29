@@ -142,7 +142,7 @@ fun MapScreen(
                             Spacer(modifier = Modifier.height(16.dp))
 
                             Text(
-                                text = item.title.toString(),
+                                text = item.address.toString(),
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier
                                     .fillMaxWidth(),

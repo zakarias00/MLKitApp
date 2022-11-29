@@ -52,7 +52,7 @@ fun ClickedItemMapScreen() {
         ) {
             Marker(
                 state = clickedItemState,
-                title = clickedItem.title,
+                title = clickedItem.address,
                 icon = mapIcon
             )
         }

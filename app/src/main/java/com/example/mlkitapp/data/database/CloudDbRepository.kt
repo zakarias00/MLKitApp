@@ -7,8 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface CloudDbRepository {
     fun getDocuments(): Flow<Resource<MutableList<RecognizedText>>?>
-    suspend fun saveDocumentAndImage(uId: String, title: String, recText: String, lat: Double, long: Double, private: Boolean, imageUri: Uri): Flow<Resource<Void?>>
-    suspend fun saveDocument(uId: String, title: String, recText: String, lat: Double, long: Double, private: Boolean): Flow<Resource<Void?>>
+    suspend fun saveDocumentAndImage(uId: String, address: String, recText: String, lat: Double, long: Double, private: Boolean, imageUri: Uri): Flow<Resource<Void?>>
     suspend fun editDocument(documentId: String, private: Boolean): Flow<Resource<Void?>>
-    suspend fun deleteDocument(documentId: String): Flow<Resource<Void?>>
+    suspend fun deleteDocument(documentId: String, imageUrl: String): Flow<Resource<Void?>>
 }

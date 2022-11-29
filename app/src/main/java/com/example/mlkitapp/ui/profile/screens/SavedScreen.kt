@@ -2,7 +2,6 @@ package com.example.mlkitapp.ui.profile.screens
 
 import android.annotation.SuppressLint
 import android.widget.Toast
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,11 +32,8 @@ import com.google.firebase.auth.FirebaseAuth
 @Composable
 fun SavedScreen(
     dbViewModel: CloudDbViewModel,
-    back: () -> Unit,
     navigationController: NavController
 ) {
-    BackHandler(onBack = back)
-
     val textsFlow = dbViewModel.getDocumentsFlow.value
     var textList: List<RecognizedText> = mutableListOf()
 

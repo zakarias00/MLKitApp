@@ -18,19 +18,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import com.example.mlkitapp.data.utils.SharedPreferences
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun TopBar(
     @StringRes title: Int,
     buttonIcon: ImageVector,
-    onBackClicked: () -> Unit,
     onNavigationButtonClicked: () -> Unit,
     onProfileButtonClicked: () -> Unit,
     scaffold: ScaffoldState,
     coroutineScope: CoroutineScope,
-    navigationController: NavController,
+    navigationController: NavHostController,
     content: @Composable () -> Unit,
 ) {
     Column(
@@ -62,7 +62,10 @@ fun TopBar(
                 } else if (buttonIcon == Icons.Default.ArrowBack) {
                     IconButton(
                         onClick = {
-                            onBackClicked()
+                            navigationController.navigateBack(
+                                SharedPreferences.targetNavRoute.value,
+                                SharedPreferences.currentNavRoute.value
+                            )
                         }
                     ) {
                         Icon(
@@ -87,5 +90,19 @@ fun TopBar(
             backgroundColor = MaterialTheme.colors.background
         )
         content.invoke()
+    }
+}
+
+
+private fun NavHostController.navigateBack(
+    targetRoute: String,
+    currentRoute: String
+) {
+    val previousRoute = previousBackStackEntry?.destination?.route ?: "null"
+
+    if (previousRoute == targetRoute) popBackStack()
+    else navigate(route = targetRoute) {
+        popUpTo(route = currentRoute) { inclusive = true }
+        launchSingleTop = true
     }
 }

@@ -37,27 +37,6 @@ class CloudDbRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun saveDocument(uId: String, title: String, recText: String, lat: Double, long: Double, private: Boolean) = flow {
-        try {
-            emit(Resource.Loading)
-            val recordId = dbReference.document().id
-            val recognizedText = RecognizedText(
-                id = recordId,
-                userId = uId,
-                title = title,
-                recognizedText = recText,
-                latitude = lat,
-                longitude = long,
-                private = private
-            )
-            val saveOperation = dbReference.document(recordId).set(recognizedText).result
-            emit(Resource.Success(saveOperation))
-        }catch (e: Exception){
-            emit(Resource.Failure(e))
-        }
-    }
-
-
     override suspend fun editDocument(documentId: String, private: Boolean) = flow {
         try{
             emit(Resource.Loading)
@@ -69,17 +48,23 @@ class CloudDbRepositoryImpl @Inject constructor(
     }
 
 
-    override suspend fun deleteDocument(documentId: String) = flow {
-        try {
-            emit(Resource.Loading)
-            val delOperation = dbReference.document(documentId).delete().await()
-            emit(Resource.Success(delOperation))
-        } catch (e: Exception){
-            emit(Resource.Failure(e))
-        }
+    override suspend fun deleteDocument(documentId: String, imageUrl: String) = callbackFlow {
+
+            trySend(Resource.Loading)
+            val delOperation = dbReference.document(documentId).delete().addOnSuccessListener {
+                val fileDelOption = storage.reference.child("images").child(getImageNameFromUrl(imageUrl)).delete().addOnCanceledListener {
+                    trySend(Resource.Success(it))
+                }.addOnFailureListener {
+                    trySend(Resource.Failure(it))
+                }
+            }.addOnFailureListener {
+                trySend(Resource.Failure(it))
+            }.addOnCompleteListener { close() }
+            awaitClose { close() }
+
     }
 
-    override suspend fun saveDocumentAndImage(uId: String, title: String, recText: String, lat: Double, long: Double, private: Boolean, imageUri: Uri) = callbackFlow {
+    override suspend fun saveDocumentAndImage(uId: String, address: String, recText: String, lat: Double, long: Double, private: Boolean, imageUri: Uri) = callbackFlow {
         val currentDate = Date().time
         val storageReference = storage.reference.child("images").child("${uId+currentDate}.jpg")
         storageReference.putFile(imageUri).addOnSuccessListener {
@@ -89,7 +74,7 @@ class CloudDbRepositoryImpl @Inject constructor(
                     hashMapOf(
                         "id" to documentId,
                         "userId" to uId,
-                        "title" to title,
+                        "address" to address,
                         "recognizedText" to recText,
                         "latitude" to lat,
                         "longitude" to long,
@@ -110,4 +95,11 @@ class CloudDbRepositoryImpl @Inject constructor(
         awaitClose { close() }
 
     }
+}
+
+
+private fun getImageNameFromUrl(url: String): String {
+    val firstPart = url.substringBefore("?alt")
+    val secondPart = firstPart.substringAfter("%2F")
+    return secondPart.replace("%20", " ")
 }

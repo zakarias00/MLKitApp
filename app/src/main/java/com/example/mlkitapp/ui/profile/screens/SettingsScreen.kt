@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,10 +37,7 @@ import com.example.mlkitapp.R
 @Composable
 fun SettingsScreen(
     navController: NavController,
-    back: () -> Unit
 ) {
-    BackHandler(onBack = back)
-
     val context = LocalContext.current
 
     Column(

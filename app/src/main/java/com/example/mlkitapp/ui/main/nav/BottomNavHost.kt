@@ -19,7 +19,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -69,10 +68,6 @@ fun BottomNavHost() {
             TopBar(
                 title = titleRes.value,
                 buttonIcon = buttonIcon.value,
-                onBackClicked = {
-                    TopBarTitleUtils.changeTitle(NavDrawerItems.TextField.title)
-                    navController.navigateUp()
-                },
                 onNavigationButtonClicked = {
                     textToSpeechViewModel.textToSpeech(context, "Now you have opened the navigation bar, where you can pick what do you want to analyze, text or barcode. The text is the first option, the barcode is the second option.")
                     scope.launch {
@@ -82,6 +77,8 @@ fun BottomNavHost() {
                 onProfileButtonClicked = {
                     textToSpeechViewModel.textToSpeech(context, "Now you are on the profile screen, where you can do several actions. By clicking on the first option, you can manage your account.")
                     navController.navigate(NAV_PROFILE) {
+                        SharedPreferences.setCurrentNavRoute(NAV_PROFILE)
+                        SharedPreferences.setTargetNavRoute(BottomNavItems.Home.navRoute)
                         popUpTo(BottomNavItems.Home.navRoute) { inclusive = true }
                     }
                 },
@@ -141,19 +138,5 @@ fun BottomNavHost() {
         },
     ) {
 
-    }
-}
-
-
-fun NavHostController.navigateBack(
-    targetRoute: String,
-    currentRoute: String
-) {
-    val previousRoute = previousBackStackEntry?.destination?.route ?: "null"
-
-    if (previousRoute == targetRoute) popBackStack()
-    else navigate(route = targetRoute) {
-        popUpTo(route = currentRoute) { inclusive = true }
-        launchSingleTop = true
     }
 }
