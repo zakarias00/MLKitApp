@@ -1,5 +1,7 @@
 package com.example.mlkitapp.ui.profile.screens
 
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,8 +25,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.InternalComposeApi
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,18 +39,23 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.mlkitapp.data.Resource
-import com.example.mlkitapp.data.utils.SharedObject
+import com.example.mlkitapp.data.utils.SharedPreferences
 import com.example.mlkitapp.ui.main.db.CloudDbViewModel
 import com.example.mlkitapp.ui.main.nav.routes.NAV_CLICKED_ITEM_OPEN_MAP
 
 @OptIn(InternalComposeApi::class)
 @Composable
 fun TextInfoScreen(
-    navController: NavController?,
+    navController: NavController?, back: () -> Unit,
     dbViewModel: CloudDbViewModel = hiltViewModel()
 ){
+    BackHandler(onBack = back)
+
     val editFlow = dbViewModel.editDocumentFlow.collectAsState()
-    val recognizedText = SharedObject.sharedRecognizedText
+    val recognizedText = SharedPreferences.sharedRecognizedText
+
+    var showToast by remember { mutableStateOf(false) }
+    var private by remember { mutableStateOf(false) }
 
     Column {
 
@@ -57,9 +66,7 @@ fun TextInfoScreen(
                 .wrapContentHeight(),
             shape = MaterialTheme.shapes.medium,
             elevation = 24.dp,
-
         ) {
-
         Column(
             modifier = Modifier
                 .fillMaxSize(0.72f)
@@ -68,7 +75,7 @@ fun TextInfoScreen(
                 .weight(1f, false),
             verticalArrangement = Arrangement.spacedBy(4.dp),
             horizontalAlignment = Alignment.Start,
-        ) {
+            ) {
             val checkStateValue = recognizedText?.private!!
             val checkedState = remember { mutableStateOf(checkStateValue) }
 
@@ -127,7 +134,9 @@ fun TextInfoScreen(
             Switch(
                 checked = checkedState.value,
                 onCheckedChange = {
+                    showToast = true
                     checkedState.value = it
+                    private = it
                     onSwitchClick(dbViewModel, recognizedText.id!!, it)
                 },
                 colors = SwitchDefaults.colors(
@@ -158,19 +167,29 @@ fun TextInfoScreen(
     }
     editFlow.value.let {
         when (it) {
-//            is Resource.Success -> {
-//                if (recognizedText?.isPrivate == true) {
-//                    Toast.makeText(LocalContext.current, "Now, your saved item is private, that means only you can access it!", Toast.LENGTH_LONG)
-//                        .show()
-//                }
-//                else{
-//                    Toast.makeText(LocalContext.current, "Now, your saved item is public, that means only every user can access it!", Toast.LENGTH_LONG)
-//                        .show()
-//                }
-//            }
-//            is Resource.Failure -> {
-//                Toast.makeText(LocalContext.current, it.exception.message, Toast.LENGTH_LONG).show()
-//            }
+            is Resource.Success -> {
+                if (private) {
+                    if(showToast) {
+                        Toast.makeText(LocalContext.current,
+                            "Now, your saved item is private, that means only you can access it!",
+                            Toast.LENGTH_LONG)
+                            .show()
+                    }
+                    showToast = false
+                }
+                else{
+                    if(showToast) {
+                        Toast.makeText(LocalContext.current,
+                            "Now, your saved item is public, that means only every user can access it!",
+                            Toast.LENGTH_LONG)
+                            .show()
+                    }
+                    showToast = false
+                }
+            }
+            is Resource.Failure -> {
+                Toast.makeText(LocalContext.current, it.exception.message, Toast.LENGTH_LONG).show()
+            }
             is Resource.Loading -> {
                 CircularProgressIndicator(
                     modifier = Modifier

@@ -5,7 +5,6 @@ package com.example.mlkitapp.ui.main.screens
 import android.graphics.Point
 import android.graphics.RectF
 import android.net.Uri
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -47,7 +46,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.mlkitapp.data.Resource
-import com.example.mlkitapp.data.utils.SharedObject
+import com.example.mlkitapp.data.utils.SharedPreferences
 import com.example.mlkitapp.ui.common.SaveTextDialog
 import com.example.mlkitapp.ui.main.barcodescan.BarcodeScannerViewModel
 import com.example.mlkitapp.ui.main.textrecognition.TextRecognViewModel
@@ -88,10 +87,8 @@ fun GalleryScreen(
     var alreadyExecuted by remember { mutableStateOf(false) }
 
     if (imageUri != null) {
-Log.i("anna", alreadyExecuted.toString())
 
         if(!alreadyExecuted) {
-            //delay(2000)
             inputType.let {
                 when (it) {
                     "Text field" -> {
@@ -101,7 +98,7 @@ Log.i("anna", alreadyExecuted.toString())
                         barcodeScannerViewModel.analyzeImage(InputImage.fromFilePath(context, imageUri!!))
                     }
                     else -> {
-                        ""
+
                     }
                 }
             }
@@ -189,7 +186,7 @@ Log.i("anna", alreadyExecuted.toString())
             ) {
                 Button(
                     onClick = {
-                        textVal = ""
+                        imageUri = null
                         alreadyExecuted = false
                         textBlocks = emptyList<Text.TextBlock>().toMutableList()
 
@@ -215,15 +212,6 @@ Log.i("anna", alreadyExecuted.toString())
 
             }
 
-            Button(
-                onClick = {
-                    textToSpeechViewModel.textToSpeech(context, textVal)
-                },
-                shape = RoundedCornerShape(55)
-            )
-            {
-                Text(text = "Read")
-            }
             Text(
                 text = textVal,
                 modifier = Modifier
@@ -236,6 +224,8 @@ Log.i("anna", alreadyExecuted.toString())
                     is Resource.Success -> {
                         textVal = it.result.text
                         textBlocks = it.result.textBlocks
+
+                        textToSpeechViewModel.textToSpeech(context, textVal)
                     }
                     is Resource.Failure -> {
                         Toast.makeText(context, it.exception.message, Toast.LENGTH_LONG).show()
@@ -246,9 +236,7 @@ Log.i("anna", alreadyExecuted.toString())
                                 .size(10.dp),
                             color = MaterialTheme.colors.primaryVariant
                         )
-                    }
-                    else -> {
-                        textVal = ""
+
                     }
                 }
             }
@@ -257,23 +245,24 @@ Log.i("anna", alreadyExecuted.toString())
                 when (it) {
                     is Resource.Success -> {
                         textVal = it.result
+                        textToSpeechViewModel.textToSpeech(context, textVal)
                     }
                     is Resource.Failure -> {
                         Toast.makeText(context, it.exception.message, Toast.LENGTH_LONG).show()
                     }
                     is Resource.Loading -> {
+                        textVal = ""
                         CircularProgressIndicator(
                             modifier = Modifier
                                 .size(10.dp),
                             color = MaterialTheme.colors.primaryVariant
                         )
                     }
-                    else -> {}
                 }
             }
 
             if (showDialog) {
-                SharedObject.getCurrLocation()
+                SharedPreferences.getCurrLocation()
                 SaveTextDialog(
                     onDismiss = { showDialog = !showDialog },
                     hiltViewModel(),
@@ -283,7 +272,7 @@ Log.i("anna", alreadyExecuted.toString())
             }
         }
     }
-    else {
+    else if(textVal == ""){
         Column(
             modifier = Modifier.fillMaxSize()
                 .padding(bottom = 24.dp),
@@ -295,7 +284,6 @@ Log.i("anna", alreadyExecuted.toString())
                 ) {
                     Button(
                         onClick = {
-                            alreadyExecuted = false
                             launcher.launch("image/*")
                         },
                         modifier = Modifier.wrapContentSize(),

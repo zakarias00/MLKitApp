@@ -5,7 +5,5 @@ import com.google.mlkit.vision.text.Text
 import kotlinx.coroutines.flow.Flow
 
 interface TextRecognRepository {
-    var recognizedText: Text?
-
     suspend fun analyzeImage(imageProxy: InputImage) : Flow<Text>
 }

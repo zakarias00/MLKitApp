@@ -2,9 +2,11 @@ package com.example.mlkitapp.ui.main.screens
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.location.Location
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -38,6 +40,7 @@ import com.example.mlkitapp.data.Resource
 import com.example.mlkitapp.data.models.RecognizedText
 import com.example.mlkitapp.data.utils.LocationUtils
 import com.example.mlkitapp.data.utils.LocationUtils.fusedLocationProviderClient
+import com.example.mlkitapp.ui.authentication.FirebaseActivity
 import com.example.mlkitapp.ui.main.db.CloudDbViewModel
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -58,6 +61,11 @@ fun MapScreen(
 ) {
     val context = LocalContext.current
 
+    BackHandler {
+        context.startActivity(Intent(context, FirebaseActivity::class.java))
+
+    }
+
     var currentLocation by remember { mutableStateOf(LocationUtils.getDefaultLocation()) }
 
     val cameraPositionState = rememberCameraPositionState()
@@ -70,8 +78,6 @@ fun MapScreen(
     var textList: List<RecognizedText> = mutableListOf()
 
     val mapUiSettings by remember { mutableStateOf(MapUiSettings()) }
-
-    var showDialog by remember { mutableStateOf(false) }
 
     if (requestLocationUpdate) {
         LocationUtils.requestLocationResultCallback(fusedLocationProviderClient) { locationResult ->

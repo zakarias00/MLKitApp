@@ -1,7 +1,6 @@
 package com.example.mlkitapp.data.database
 
 import android.net.Uri
-import android.util.Log
 import com.example.mlkitapp.data.Resource
 import com.example.mlkitapp.data.models.RecognizedText
 import com.google.firebase.firestore.CollectionReference
@@ -26,7 +25,6 @@ class CloudDbRepositoryImpl @Inject constructor(
             val response =
                 if (snapshot != null) {
                     val recognizedTexts = snapshot.toObjects(RecognizedText::class.java)
-                    Log.i("anna", recognizedTexts[0].toString())
                     Resource.Success(recognizedTexts)
                 }
                 else {
@@ -112,35 +110,4 @@ class CloudDbRepositoryImpl @Inject constructor(
         awaitClose { close() }
 
     }
-//        return channelFlow {
-//            val result = MutableStateFlow<Resource<Void>?>(null)
-//
-//            val documentId = dbReference.document().id
-//            val recognizedText = RecognizedText(id = documentId, userId = uId, title = title, recognizedText = recText, latitude = lat, longitude = long, private = private)
-//
-//            val uploadOp = storage.reference.child("images").child("$title.jpg").putFile(imageUri).await()
-//            val downloadedUrl =  uploadOp.storage.downloadUrl.await()
-//            if(downloadedUrl != null) {
-//                GlobalScope.launch {
-//                    recognizedText.imageUri = downloadedUrl
-//                    val saveOp = dbReference.document(documentId).set(recognizedText)
-//                    if(saveOp.isSuccessful) {
-//                        result.value = Resource.Success(saveOp.result)
-//                    }
-//                    else{
-//                        result.value = Resource.Failure(saveOp.exception!!)
-//                    }
-//                }
-//            }
-//            else{
-//                result.value = Resource.Failure(uploadOp.error!!)
-//            }
-//
-//            awaitClose {
-//                trySend(result.value!!)
-//                channel.close()
-//            }
-//
-//        }
-
 }

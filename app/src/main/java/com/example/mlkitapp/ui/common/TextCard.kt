@@ -6,10 +6,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -19,6 +18,10 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.InternalComposeApi
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -26,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.mlkitapp.data.Resource
 import com.example.mlkitapp.data.models.RecognizedText
-import com.example.mlkitapp.data.utils.SharedObject
+import com.example.mlkitapp.data.utils.SharedPreferences
 import com.example.mlkitapp.ui.main.db.CloudDbViewModel
 import com.example.mlkitapp.ui.main.nav.routes.NAV_CLICKED_ITEM
 
@@ -40,16 +43,18 @@ fun TextCard(
     val context = LocalContext.current
     val deleteFlow = dbViewModel.deleteDocumentFlow.collectAsState()
 
+    var showToast by remember { mutableStateOf(true) }
+
     Card(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth()
             .wrapContentHeight()
             .clickable {
-                SharedObject.addSharedRecognizedText(recognizedText)
+                SharedPreferences.addSharedRecognizedText(recognizedText)
                 navController!!.navigate(NAV_CLICKED_ITEM)
             },
-        shape = MaterialTheme.shapes.medium,
+        shape = RoundedCornerShape(12.dp),
         elevation = 5.dp,
         backgroundColor = MaterialTheme.colors.surface
     ) {
@@ -69,8 +74,9 @@ fun TextCard(
 
             IconButton(
                 onClick = {
+                    showToast = true
                     dbViewModel.deleteDocument(recognizedText.id!!)
-                          },
+                },
                 modifier = Modifier.weight(0.5F)
             ) {
                 Icon(
@@ -79,25 +85,35 @@ fun TextCard(
                     tint = MaterialTheme.colors.primary
                 )
             }
-            deleteFlow.value.let {
-                when (it) {
-                    is Resource.Success -> {
-                        //Toast.makeText(context, "Successfully deleted item!", Toast.LENGTH_LONG).show()
-                    }
-                    is Resource.Failure -> {
-                        Toast.makeText(context, it.exception.message, Toast.LENGTH_LONG).show()
-                    }
-                    is Resource.Loading -> {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .size(10.dp),
-                            color = MaterialTheme.colors.primaryVariant
-                        )
-                    }
+        }
 
+        //Log.i("")
+        deleteFlow.value.let {
+            when (it) {
+                is Resource.Success -> {
+                    //if (showToast) {
+                        Toast.makeText(context, "Successfully deleted item!", Toast.LENGTH_LONG).show()
+                  //  }
+//                    deleteFlow.value = Resource.Loading
                 }
+                is Resource.Failure -> {
+                    //if (showToast) {
+                        Toast.makeText(context, it.exception.message, Toast.LENGTH_LONG).show()
+                   // }
+                    showToast = false
+                }
+                is Resource.Loading -> {
+//                    CircularProgressIndicator(
+//                        modifier = Modifier
+//                            .padding(top = 36.dp)
+//                            .size(4.dp),
+//                        color = MaterialTheme.colors.primaryVariant
+//                    )
+                }
+
             }
         }
+
     }
 
 

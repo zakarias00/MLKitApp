@@ -26,7 +26,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.mlkitapp.R
-import com.example.mlkitapp.data.utils.SharedObject
+import com.example.mlkitapp.data.utils.SharedPreferences
 import com.example.mlkitapp.ui.main.nav.navitems.NavDrawerItems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -65,7 +65,7 @@ fun NavigationDrawer(
         items.forEach { item ->
             DrawerItem(item = item, selected = currentRoute == item.navRoute, onItemClick = {
                 it.title
-                SharedObject.changeInput(item.title)
+                SharedPreferences.changeInput(item.title)
 
                 scope.launch {
                     scaffoldState.drawerState.close()

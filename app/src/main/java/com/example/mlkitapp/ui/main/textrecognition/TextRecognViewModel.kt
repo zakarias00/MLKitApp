@@ -22,12 +22,6 @@ class TextRecognViewModel @Inject constructor(
     private val _recognizedTextFlow = MutableStateFlow<Resource<Text>?>(null)
     val recognizedTextFlow : StateFlow<Resource<Text>?> = _recognizedTextFlow
 
-    init {
-        if(repository.recognizedText != null) {
-            _recognizedTextFlow.value = Resource.Success(repository.recognizedText!!)
-        }
-    }
-
     fun analyzeImage(image: InputImage) = viewModelScope.launch {
         _recognizedTextFlow.value = Resource.Loading
         repository.analyzeImage(image)

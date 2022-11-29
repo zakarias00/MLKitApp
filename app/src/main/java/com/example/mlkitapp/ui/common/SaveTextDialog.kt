@@ -3,6 +3,8 @@ package com.example.mlkitapp.ui.common
 import android.content.Context
 import android.location.Geocoder
 import android.net.Uri
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,10 +33,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.example.mlkitapp.data.utils.SharedObject
+import com.example.mlkitapp.data.Resource
+import com.example.mlkitapp.data.utils.SharedPreferences
 import com.example.mlkitapp.ui.main.db.CloudDbViewModel
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.runBlocking
 
 
 @OptIn(InternalComposeApi::class)
@@ -49,7 +53,7 @@ fun SaveTextDialog(
     val currentUserId = FirebaseAuth.getInstance().currentUser!!.uid
     val context = LocalContext.current
 
-    val currLoc = SharedObject.getCurrLocation()
+    val currLoc = SharedPreferences.getCurrLocation()
 
     Dialog(
         onDismissRequest = { onDismiss() },
@@ -114,7 +118,10 @@ fun SaveTextDialog(
                                 false,
                                 imageUrl
                             )
-                            onDismiss()
+                            //delay(2000)
+                            runBlocking {
+                                onDismiss()
+                            }
                         },
                         Modifier
                             .wrapContentSize()
@@ -123,7 +130,10 @@ fun SaveTextDialog(
                         shape = RoundedCornerShape(55.dp),
                         enabled = (currLoc.latitude != 0.0 && currLoc.longitude != 0.0)
                     ) {
-                        Text(text = "Save to the cloud", fontSize = 10.sp)
+                        Text(
+                            text = "Save to the cloud",
+                            fontSize = 10.sp
+                        )
                     }
 
                     Button(
@@ -137,8 +147,8 @@ fun SaveTextDialog(
                                 true,
                                 imageUrl
                             )
-                                onDismiss()
-                            },
+                            onDismiss()
+                        },
                         Modifier
                             .wrapContentSize()
                             .padding(4.dp)
@@ -146,30 +156,29 @@ fun SaveTextDialog(
                         shape = RoundedCornerShape(55.dp),
                         enabled = (currLoc.latitude != 0.0 && currLoc.longitude != 0.0)
                         ) {
-                        Text(text = "Save for myself", fontSize = 10.sp)
+                        Text(
+                            text = "Save for myself",
+                            fontSize = 10.sp
+                        )
                     }
                 }
             }
         }
 
-//        saveTextFlow.value.let { saveResult ->
-//            when(saveResult){
-//                is Resource.Loading -> {
-//                    CircularProgressIndicator(
-//                        modifier = Modifier
-//                            .size(10.dp),
-//                        color = MaterialTheme.colors.primaryVariant
-//                    )
-//                }
-//                is Resource.Failure -> {
-//                    Toast.makeText(LocalContext.current, saveResult.exception.message, Toast.LENGTH_LONG).show()
-//                }
-//                 is Resource.Success -> {
-//                     Toast.makeText(LocalContext.current, "The item was successfully saved!", Toast.LENGTH_LONG).show()
-//                     onDismiss()
-//                 }
-//            }
-//        }
+        Log.i("anna", saveTextFlow.value.toString())
+        saveTextFlow.value.let { saveResult ->
+            when(saveResult){
+                is Resource.Failure -> {
+                    Toast.makeText(context, saveResult.exception.message, Toast.LENGTH_LONG).show()
+                }
+                 is Resource.Success -> {
+                     Toast.makeText(context, "The item was successfully saved!", Toast.LENGTH_LONG).show()
+                 }
+                else -> {
+
+                }
+            }
+        }
     }
 }
 

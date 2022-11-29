@@ -19,11 +19,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.mlkitapp.R
-import com.example.mlkitapp.data.utils.SharedObject
+import com.example.mlkitapp.data.utils.SharedPreferences
 import com.example.mlkitapp.data.utils.TopBarTitleUtils
 import com.example.mlkitapp.ui.common.AppBottomNavigation
 import com.example.mlkitapp.ui.common.NavigationDrawer
@@ -32,10 +33,8 @@ import com.example.mlkitapp.ui.main.MapActivity
 import com.example.mlkitapp.ui.main.nav.navitems.BottomNavItems
 import com.example.mlkitapp.ui.main.nav.navitems.NavDrawerItems
 import com.example.mlkitapp.ui.main.nav.routes.NAV_PROFILE
-import com.example.mlkitapp.ui.main.nav.routes.NAV_RECOGNIZED_TEXT
 import com.example.mlkitapp.ui.main.screens.GalleryScreen
 import com.example.mlkitapp.ui.main.screens.MainContent
-import com.example.mlkitapp.ui.main.screens.RecognizedTextScreen
 import com.example.mlkitapp.ui.main.screens.TextToSpeechViewModel
 import com.example.mlkitapp.ui.profile.nav.ProfileNavHost
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -96,7 +95,7 @@ fun BottomNavHost() {
                 ) {
 
                     composable(BottomNavItems.Home.navRoute) {
-                        TopBarTitleUtils.changeTitle(SharedObject.selectedInput.value)
+                        TopBarTitleUtils.changeTitle(SharedPreferences.selectedInput.value)
                         buttonIcon.value = Icons.Default.Menu
                         MainContent(Modifier.fillMaxSize())
                        // ImagePicker(
@@ -106,7 +105,7 @@ fun BottomNavHost() {
 //                        )
                     }
                     composable(BottomNavItems.Gallery.navRoute) {
-                        TopBarTitleUtils.changeTitle(SharedObject.selectedInput.value)
+                        TopBarTitleUtils.changeTitle(SharedPreferences.selectedInput.value)
                         buttonIcon.value = Icons.Default.Menu
                         if(titleRes.value == NavDrawerItems.TextField.title) {
                             GalleryScreen(
@@ -130,13 +129,8 @@ fun BottomNavHost() {
                     composable(NAV_PROFILE) {
                         TopBarTitleUtils.changeTitle(R.string.profile)
                         buttonIcon.value = Icons.Default.ArrowBack
-                        ProfileNavHost(rememberNavController())
-                    }
-                    composable(NAV_RECOGNIZED_TEXT) {
-                        RecognizedTextScreen(
-                            textRecognViewModel = hiltViewModel(),
-                            barcodeScannerViewModel = hiltViewModel(),
-                            bitmap = null
+                        ProfileNavHost(
+                            rememberNavController()
                         )
                     }
                 }
@@ -147,5 +141,19 @@ fun BottomNavHost() {
         },
     ) {
 
+    }
+}
+
+
+fun NavHostController.navigateBack(
+    targetRoute: String,
+    currentRoute: String
+) {
+    val previousRoute = previousBackStackEntry?.destination?.route ?: "null"
+
+    if (previousRoute == targetRoute) popBackStack()
+    else navigate(route = targetRoute) {
+        popUpTo(route = currentRoute) { inclusive = true }
+        launchSingleTop = true
     }
 }

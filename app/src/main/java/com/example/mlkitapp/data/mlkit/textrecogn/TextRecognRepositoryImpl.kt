@@ -13,8 +13,6 @@ import kotlinx.coroutines.flow.callbackFlow
 
 class TextRecognRepositoryImpl @Inject constructor() : TextRecognRepository {
 
-    override var recognizedText: Text? = null
-
     private val textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
     @SuppressLint("UnsafeOptInUsageError")

@@ -1,7 +1,7 @@
 package com.example.mlkitapp.ui.profile.screens
 
 import android.content.Intent
-import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,8 +27,11 @@ import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun AccountManagerScreen(
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    back: () -> Unit
 ) {
+    BackHandler(onBack = back)
+
     val currentUser = FirebaseAuth.getInstance().currentUser
     val context = LocalContext.current
     val provider = currentUser!!.providerData[currentUser.providerData.size - 1].providerId
@@ -38,11 +41,12 @@ fun AccountManagerScreen(
             "password" -> {
                 "email address and password"
             }
-            "google" -> {
+            "google.com" -> {
                 "Google account"
             }
+
             else -> {
-                "Facebook account"
+                ""
             }
         }
     }
@@ -52,59 +56,63 @@ fun AccountManagerScreen(
             "password" -> {
                 R.drawable.ic_email
             }
-            "google" -> {
+            "google.com" -> {
                 R.drawable.icon_google
             }
             else -> {
-                R.drawable.ic_facebook
+                R.drawable.ic_email
             }
         }
     }
 
-        Column(
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(start = 24.dp, end = 24.dp, top = 36.dp),
+        verticalArrangement = Arrangement.spacedBy(24.dp),
+        horizontalAlignment = CenterHorizontally
+    ) {
+
+        Icon(
+            painterResource(id = providerIcon),
+            contentDescription = providerName,
+            tint = Color.Unspecified
+        )
+
+        Text(
+            "You are signed in with your $providerName",
+            fontSize = 18.sp,
+            textAlign = TextAlign.Center,
+        )
+
+
+        Button(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(start = 24.dp, end = 24.dp, top = 36.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp),
-            horizontalAlignment = CenterHorizontally
-        ) {
+                .padding(vertical = 24.dp)
+                .align(CenterHorizontally)
+                .wrapContentSize(),
+            shape = RoundedCornerShape(55),
+            enabled = provider == "password",
+            onClick = {
+                currentUser.email?.let { authViewModel.resetPassword(it) }
 
-                Icon(
-                    painterResource(id = providerIcon),
-                    contentDescription = providerName,
-                    tint = Color.Unspecified
-                )
-
-                Text(
-                    "You are signed in with your $providerName",
-                    fontSize = 18.sp,
-                    textAlign = TextAlign.Center,
-                )
-
-
-            Button(
-                modifier = Modifier
-                    .padding(vertical = 24.dp)
-                    .align(CenterHorizontally)
-                    .wrapContentSize(),
-                shape = RoundedCornerShape(55),
-                onClick = {
-                    if (provider == "password") {
-                        currentUser.email?.let { authViewModel.resetPassword(it) }
-
-                        val intent = Intent(Intent.ACTION_MAIN)
-                        intent.addCategory(Intent.CATEGORY_APP_EMAIL)
-                        context.startActivity(Intent.createChooser(intent, "Email"))
-                    } else
-                        Toast.makeText(context,
-                            "You cannot change your password, because you are signed in via socials!",
-                            Toast.LENGTH_LONG).show()
-                }
-            ) {
-                Text(text = "Change password")
-
+                val intent = Intent(Intent.ACTION_MAIN)
+                intent.addCategory(Intent.CATEGORY_APP_EMAIL)
+                context.startActivity(Intent.createChooser(intent, "Email"))
             }
+        ) {
+            Text(text = "Change password")
+
         }
 
+        if (provider != "password") {
+            Text(
+                text = "Note: You cannot change your password, because you are signed in via socials!",
+                fontSize = 14.sp
+            )
+        }
+    }
 }
+
+
 

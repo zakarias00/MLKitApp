@@ -107,6 +107,8 @@ fun LoginScreen(
 
     var showDialog by remember { mutableStateOf(false) }
 
+    var showToast by remember { mutableStateOf(false) }
+
     val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {
         val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
         try {
@@ -255,6 +257,7 @@ fun LoginScreen(
                     )
                 },
                 onClick = {
+                    showToast = true
                     authViewModel.login(userEmail.trim(), userPassword.trim())
                 },
                 shape = RoundedCornerShape(55),
@@ -368,7 +371,10 @@ fun LoginScreen(
             loginFlow.value.let { emailLogin ->
                 when (emailLogin) {
                     is Resource.Failure -> {
-                        Toast.makeText(context, emailLogin.exception.message, Toast.LENGTH_LONG).show()
+                        if(showToast){
+                            Toast.makeText(context, emailLogin.exception.message, Toast.LENGTH_LONG).show()
+                        }
+                        showToast = false
                     }
                     is Resource.Success -> {
                         LaunchedEffect(Unit) {
@@ -385,10 +391,16 @@ fun LoginScreen(
                     else -> loginWithCredentialsFlow.value?.let {
                         when (it) {
                             is Resource.Failure -> {
-                                Toast.makeText(context, it.exception.message, Toast.LENGTH_LONG).show()
+                                if(showToast){
+
+                                    Toast.makeText(context, it.exception.message, Toast.LENGTH_LONG).show()
+                                }
+                                showToast = false
                             }
                             is Resource.Success -> {
-                                navController.navigate(NAV_MAIN_SCREEN)
+                                LaunchedEffect(Unit) {
+                                    navController.navigate(NAV_MAIN_SCREEN)
+                                }
                             }
                             else -> {
                                 CircularProgressIndicator(

@@ -5,12 +5,15 @@ import com.example.mlkitapp.data.models.RecognizedText
 import com.example.mlkitapp.ui.main.nav.navitems.NavDrawerItems
 import com.google.android.gms.maps.model.LatLng
 
-object SharedObject {
+object SharedPreferences {
     var sharedRecognizedText: RecognizedText? = null
 
     var currentLocation = mutableStateOf(LocationUtils.getDefaultLocation())
     var updateLocation = mutableStateOf(true)
+
     var selectedInput = mutableStateOf(NavDrawerItems.TextField.title)
+
+    var isTextToSpeechEnabled = mutableStateOf(true)
 
     fun getCurrLocation(): LatLng{
         if(updateLocation.value){
@@ -29,5 +32,9 @@ object SharedObject {
 
     fun changeInput(inputRes: Int){
         selectedInput.value = inputRes
+    }
+
+    fun changeTextToSpeechAvailability(){
+        isTextToSpeechEnabled.value = !isTextToSpeechEnabled.value
     }
 }

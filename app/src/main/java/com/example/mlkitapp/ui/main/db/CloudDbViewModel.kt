@@ -26,13 +26,13 @@ class CloudDbViewModel @Inject constructor(
     private val _getDocumentsFlow = mutableStateOf<Resource<List<RecognizedText>>>(Resource.Loading)
     val getDocumentsFlow: State<Resource<List<RecognizedText>>> = _getDocumentsFlow
 
-    private val _saveDocumentFlow = MutableStateFlow<Resource<Void?>>(Resource.Success(null))
+    private val _saveDocumentFlow = MutableStateFlow<Resource<Void?>>(Resource.Loading)
     val saveDocumentFlow: StateFlow<Resource<Void?>> = _saveDocumentFlow
 
     private val _editDocumentFlow = MutableStateFlow<Resource<Void?>>(Resource.Success(null))
     val editDocumentFlow: StateFlow<Resource<Void?>> = _editDocumentFlow
 
-    private val _deleteDocumentFlow = MutableStateFlow<Resource<Void?>>(Resource.Success(null))
+    private val _deleteDocumentFlow = MutableStateFlow<Resource<Void?>>(Resource.Loading)
     val deleteDocumentFlow: StateFlow<Resource<Void?>> = _deleteDocumentFlow
 
     init{
@@ -48,32 +48,20 @@ class CloudDbViewModel @Inject constructor(
     }
 
     fun saveDocumentAndImage(userId: String, title: String, text: String, lat: Double, long: Double, isPrivate: Boolean, imageUri: Uri) = GlobalScope.launch{
-        _saveDocumentFlow.value = Resource.Loading
         repository.saveDocumentAndImage(userId, title, text, lat, long, isPrivate, imageUri)
             .flowOn(Dispatchers.IO)
             .collect{
                 _saveDocumentFlow.value = it
-
         }
     }
 
-
-    fun saveDocument(userId: String, title: String, text: String, lat: Double, long: Double, isPrivate: Boolean) = viewModelScope.launch {
-        _saveDocumentFlow.value = Resource.Loading
-        repository.saveDocument(userId, title, text, lat, long, isPrivate)
-            .flowOn(Dispatchers.IO)
-            .collect{
-                _saveDocumentFlow.value = it
-            }
-    }
-
     fun deleteDocument(id: String) = viewModelScope.launch {
-        _deleteDocumentFlow.value = Resource.Loading
         repository.deleteDocument(id)
             .flowOn(Dispatchers.IO)
             .collect{
                 _deleteDocumentFlow.value = it
             }
+        _deleteDocumentFlow.value = Resource.Loading
     }
 
 
