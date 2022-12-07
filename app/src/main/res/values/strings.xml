@@ -17,7 +17,8 @@
     <string name="without_account">If you do not have an account, sign up!</string>
     <string name="registration_button_text">REGISTRATE</string>
     <string name="cancel_button_text">CANCEL</string>
-R
+
+    <string name="app_icon_button_description">Eye icon</string>
 
     <string name="client_secret">350873722416-nkkpua2ka87gkcb1bk5f265ueas4c9vf.apps.googleusercontent.com</string>
     <string name="fb_app_id">843607933654556</string>

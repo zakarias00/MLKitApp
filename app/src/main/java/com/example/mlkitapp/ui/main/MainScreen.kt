@@ -20,8 +20,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import com.example.mlkitapp.ui.main.nav.BottomNavHost
+import com.example.mlkitapp.ui.nav.main.BottomNavHost
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionsRequired
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -29,7 +30,6 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun MainScreen(){
-
     val multiplePermissionState = rememberMultiplePermissionsState(
         permissions = listOf(
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -43,31 +43,30 @@ fun MainScreen(){
     }
 
     val context = LocalContext.current
-    var ok by remember {
+    var permissionState by remember {
         mutableStateOf(false)
     }
     PermissionsRequired(
         multiplePermissionsState = multiplePermissionState,
         permissionsNotGrantedContent = {
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize()
+                    .testTag("MAIN"),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
-
             )
             {
                 Button(
                     onClick = {
-                        ok = true
+                        permissionState = true
                     },
                     shape = RoundedCornerShape(55.dp)
                 ) {
-                    Text("Allow app to use location")
+                    Text("Allow app to use location and camera")
                 }
             }
         },
         permissionsNotAvailableContent = {
-
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
@@ -84,19 +83,17 @@ fun MainScreen(){
                     Text("Open permission settings")
                 }
             }
-
-
-        }) {
+        }
+    ) {
         BottomNavHost()
     }
 
-    if(ok){
+    if(permissionState){
         LaunchedEffect(Unit) {
             multiplePermissionState.launchMultiplePermissionRequest()
         }
     }
 }
-
 
 private fun openSettingsClick(context: Context) {
     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)

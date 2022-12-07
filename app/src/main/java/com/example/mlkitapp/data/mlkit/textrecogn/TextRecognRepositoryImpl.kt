@@ -14,12 +14,14 @@ import kotlinx.coroutines.flow.callbackFlow
 class TextRecognRepositoryImpl @Inject constructor() : TextRecognRepository {
 
     private val textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+    override var recognizedText: Text? = null
 
     @SuppressLint("UnsafeOptInUsageError")
-    override suspend fun analyzeImage(imageProxy: InputImage): Flow<Text> = callbackFlow{
-        textRecognizer.process(imageProxy)
+    override suspend fun analyzeImage(inputImage: InputImage): Flow<Text> = callbackFlow{
+        textRecognizer.process(inputImage)
             .addOnSuccessListener {
                 trySend(it)
+                recognizedText = it
             }
             .addOnFailureListener {
                 it.printStackTrace()

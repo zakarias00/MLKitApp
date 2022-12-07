@@ -44,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -54,11 +55,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.mlkitapp.R
 import com.example.mlkitapp.data.Resource
-import com.example.mlkitapp.ui.authentication.AuthViewModel
-import com.example.mlkitapp.ui.main.nav.routes.NAV_LOGIN
-import com.example.mlkitapp.ui.main.nav.routes.NAV_MAIN_SCREEN
-import com.example.mlkitapp.ui.main.nav.routes.NAV_SIGNUP
-import com.example.mlkitapp.ui.main.screens.TextToSpeechViewModel
+import com.example.mlkitapp.ui.authentication.viewmodel.AuthViewModel
+import com.example.mlkitapp.ui.main.texttospeech.TextToSpeechViewModel
+import com.example.mlkitapp.ui.nav.routes.NAV_LOGIN
+import com.example.mlkitapp.ui.nav.routes.NAV_MAIN_SCREEN
+import com.example.mlkitapp.ui.nav.routes.NAV_SIGNUP
 import kotlinx.coroutines.launch
 
 
@@ -70,6 +71,7 @@ fun RegistrationScreen(
     navController: NavHostController,
     textToSpeechViewModel: TextToSpeechViewModel = viewModel()
 ) {
+    val sharedPrefs = LocalContext.current.getSharedPreferences("isTextToSpeechEnabled", Context.MODE_PRIVATE) ?: return
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -133,7 +135,8 @@ fun RegistrationScreen(
     val context = LocalContext.current
 
     Scaffold(
-        scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState)
+        scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState),
+        modifier = Modifier.testTag("REGISTRATION_SCREEN")
     ) {
         Column(
             modifier = Modifier
@@ -145,11 +148,12 @@ fun RegistrationScreen(
 
             Icon(
                 painterResource(id = R.drawable.ic_logo),
-                contentDescription = stringResource(id = R.string.logout),
+                contentDescription = stringResource(id = R.string.app_icon_button_description),
                 modifier = Modifier
                     .size(160.dp)
                     .padding(24.dp)
-                    .align(CenterHorizontally),
+                    .align(CenterHorizontally)
+                    .testTag("APP_ICON"),
             )
             
             OutlinedTextField(
@@ -161,7 +165,8 @@ fun RegistrationScreen(
                                 bringIntoViewRequester.bringIntoView()
                             }
                         }
-                    },
+                    }
+                    .testTag("REGISTRATION_EMAIL_FIELD"),
                 shape = RoundedCornerShape(55),
                 value = email,
                 label = {
@@ -202,7 +207,8 @@ fun RegistrationScreen(
                                 bringIntoViewRequester.bringIntoView()
                             }
                         }
-                    },
+                    }
+                    .testTag("REGISTRATION_PASSWORD_FIELD"),
                 shape = RoundedCornerShape(55),
                 value = password,
                 label = {
@@ -229,7 +235,10 @@ fun RegistrationScreen(
                     PasswordVisualTransformation()
                 }, trailingIcon = {
                     if (showPassword) {
-                        IconButton(onClick = { showPassword = false }) {
+                        IconButton(
+                            onClick = { showPassword = false },
+                            modifier = Modifier.testTag("VISIBILITY_OFF_ICON_TAG"),
+                        ) {
                             Icon(
                                 painterResource(id = R.drawable.ic_visibility),
                                 contentDescription = stringResource(id = R.string.visibility_icon),
@@ -237,7 +246,10 @@ fun RegistrationScreen(
                             )
                         }
                     } else {
-                        IconButton(onClick = { showPassword = true }) {
+                        IconButton(
+                            onClick = { showPassword = true },
+                            modifier = Modifier.testTag("VISIBILITY_ON_ICON_TAG")
+                        ) {
                             Icon(
                                 painterResource(id = R.drawable.ic_visibility_off),
                                 contentDescription = stringResource(id = R.string.visibility_off_icon),
@@ -266,7 +278,8 @@ fun RegistrationScreen(
                                 bringIntoViewRequester.bringIntoView()
                             }
                         }
-                    },
+                    }
+                    .testTag("REGISTRATION_CONFIRMED_PASSWORD_FIELD"),
                 shape = RoundedCornerShape(55),
                 value = confirmedPassword,
                 label = {
@@ -293,19 +306,25 @@ fun RegistrationScreen(
                 },
                 trailingIcon = {
                     if (showConfirmPassword) {
-                        IconButton(onClick = { showConfirmPassword = false }) {
+                        IconButton(
+                            onClick = { showConfirmPassword = false },
+                            modifier = Modifier.testTag("CONFIRMED_PASSWORD_VISIBILITY_OFF_ICON_TAG")
+                        ) {
                             Icon(
                                 painterResource(id = R.drawable.ic_visibility),
-                                contentDescription = stringResource(id = R.string.visibility_icon),
-                                tint = MaterialTheme.colors.primaryVariant
+                                contentDescription = stringResource(id = R.string.visibility_off_icon),
+                                tint = MaterialTheme.colors.primaryVariant,
                             )
                         }
                     } else {
-                        IconButton(onClick = { showConfirmPassword = true }) {
+                        IconButton(
+                            onClick = { showConfirmPassword = true },
+                            modifier = Modifier.testTag("CONFIRMED_PASSWORD_VISIBILITY_ON_ICON_TAG")
+                        ) {
                             Icon(
                                 painterResource(id = R.drawable.ic_visibility_off),
-                                contentDescription = stringResource(id = R.string.visibility_off_icon),
-                                tint = MaterialTheme.colors.primaryVariant
+                                contentDescription = stringResource(id = R.string.visibility_icon),
+                                tint = MaterialTheme.colors.primaryVariant,
                             )
                         }
                     }
@@ -324,7 +343,8 @@ fun RegistrationScreen(
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(40.dp),
+                    .height(40.dp)
+                    .testTag("REGISTRATION_BUTTON"),
                 enabled = email.isNotEmpty() && password.isNotEmpty() && password == confirmedPassword,
                 content = {
                     Text(
@@ -343,7 +363,8 @@ fun RegistrationScreen(
             OutlinedButton(
                 modifier = Modifier
                     .wrapContentSize()
-                    .align(CenterHorizontally),
+                    .align(CenterHorizontally)
+                    .testTag("CANCEL_BUTTON"),
                 content = {
                     Text(
                         text = stringResource(id = R.string.cancel_button_text)
@@ -365,11 +386,13 @@ fun RegistrationScreen(
                     Resource.Loading -> {
                         CircularProgressIndicator(
                             modifier = Modifier
-                                .size(10.dp),
+                                .size(10.dp)
+                                .testTag("REGISTRATION_PROGRESS_INDICATOR"),
                             color = MaterialTheme.colors.primaryVariant
                         )
                     }
                     is Resource.Success -> {
+                        sharedPrefs.edit().putString("isTextToSpeechEnabled", "true").apply()
                         LaunchedEffect(Unit) {
                             navController.navigate(NAV_MAIN_SCREEN)
                         }

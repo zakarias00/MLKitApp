@@ -2,11 +2,12 @@ package com.example.mlkitapp.data.utils
 
 import androidx.compose.runtime.mutableStateOf
 import com.example.mlkitapp.data.models.RecognizedText
-import com.example.mlkitapp.ui.main.nav.navitems.NavDrawerItems
-import com.example.mlkitapp.ui.main.nav.routes.NAV_HOME
+import com.example.mlkitapp.ui.nav.navdrawer.navitems.NavDrawerItems
+import com.example.mlkitapp.ui.nav.routes.NAV_HOME
 import com.google.android.gms.maps.model.LatLng
 
 object SharedPreferences {
+
     var sharedRecognizedText: RecognizedText? = null
 
     var currentLocation = mutableStateOf(LocationUtils.getDefaultLocation())
@@ -15,8 +16,6 @@ object SharedPreferences {
     var selectedInput = mutableStateOf(NavDrawerItems.TextField.title)
     var currentNavRoute = mutableStateOf(NAV_HOME)
     var targetNavRoute = mutableStateOf(NAV_HOME)
-
-    var isTextToSpeechEnabled = mutableStateOf(true)
 
     fun getCurrLocation(): LatLng{
         if(updateLocation.value){
@@ -43,9 +42,5 @@ object SharedPreferences {
 
     fun setCurrentNavRoute(navRoute: String){
         targetNavRoute.value = navRoute
-    }
-
-    fun changeTextToSpeechAvailability(){
-        isTextToSpeechEnabled.value = !isTextToSpeechEnabled.value
     }
 }

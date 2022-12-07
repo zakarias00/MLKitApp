@@ -51,8 +51,8 @@ class CloudDbRepositoryImpl @Inject constructor(
     override suspend fun deleteDocument(documentId: String, imageUrl: String) = callbackFlow {
 
             trySend(Resource.Loading)
-            val delOperation = dbReference.document(documentId).delete().addOnSuccessListener {
-                val fileDelOption = storage.reference.child("images").child(getImageNameFromUrl(imageUrl)).delete().addOnCanceledListener {
+            dbReference.document(documentId).delete().addOnSuccessListener {
+                storage.reference.child("images").child(getImageNameFromUrl(imageUrl)).delete().addOnCanceledListener {
                     trySend(Resource.Success(it))
                 }.addOnFailureListener {
                     trySend(Resource.Failure(it))
@@ -64,7 +64,9 @@ class CloudDbRepositoryImpl @Inject constructor(
 
     }
 
-    override suspend fun saveDocumentAndImage(uId: String, address: String, recText: String, lat: Double, long: Double, private: Boolean, imageUri: Uri) = callbackFlow {
+    override suspend fun saveDocumentAndImage(
+        uId: String, address: String, recText: String, lat: Double, long: Double, private: Boolean, imageUri: Uri
+    ) = callbackFlow {
         val currentDate = Date().time
         val storageReference = storage.reference.child("images").child("${uId+currentDate}.jpg")
         storageReference.putFile(imageUri).addOnSuccessListener {
@@ -93,7 +95,6 @@ class CloudDbRepositoryImpl @Inject constructor(
             trySend(Resource.Failure(it))
         }.addOnCompleteListener { close() }
         awaitClose { close() }
-
     }
 }
 

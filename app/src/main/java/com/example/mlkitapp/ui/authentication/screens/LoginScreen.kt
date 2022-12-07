@@ -10,14 +10,12 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -47,6 +45,7 @@ import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -57,12 +56,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.mlkitapp.R
 import com.example.mlkitapp.data.Resource
-import com.example.mlkitapp.ui.authentication.AuthViewModel
-import com.example.mlkitapp.ui.common.ChangePasswordAlertDialog
-import com.example.mlkitapp.ui.main.nav.routes.NAV_LOGIN
-import com.example.mlkitapp.ui.main.nav.routes.NAV_MAIN_SCREEN
-import com.example.mlkitapp.ui.main.nav.routes.NAV_SIGNUP
-import com.example.mlkitapp.ui.main.screens.TextToSpeechViewModel
+import com.example.mlkitapp.ui.authentication.component.ChangePasswordAlertDialog
+import com.example.mlkitapp.ui.authentication.viewmodel.AuthViewModel
+import com.example.mlkitapp.ui.main.texttospeech.TextToSpeechViewModel
+import com.example.mlkitapp.ui.nav.routes.NAV_LOGIN
+import com.example.mlkitapp.ui.nav.routes.NAV_MAIN_SCREEN
+import com.example.mlkitapp.ui.nav.routes.NAV_SIGNUP
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -77,6 +76,7 @@ fun LoginScreen(
     navController: NavController,
     textToSpeechViewModel: TextToSpeechViewModel = viewModel(),
 ) {
+    val sharedPrefs = LocalContext.current.getSharedPreferences("isTextToSpeechEnabled", Context.MODE_PRIVATE) ?: return
 
     var userEmail by remember { mutableStateOf("") }
     var userPassword by remember { mutableStateOf("") }
@@ -122,6 +122,7 @@ fun LoginScreen(
 
     Scaffold(
         scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState),
+        modifier = Modifier.testTag("LOGIN_SCREEN")
     ) {
         Column(
             modifier = Modifier
@@ -133,11 +134,12 @@ fun LoginScreen(
 
             Icon(
                 painterResource(id = R.drawable.ic_logo),
-                contentDescription = stringResource(id = R.string.logout),
+                contentDescription = stringResource(id = R.string.app_icon_button_description),
                 modifier = Modifier
                     .size(160.dp)
                     .padding(24.dp)
                     .align(Alignment.CenterHorizontally)
+                    .testTag("APP_ICON")
             )
 
             OutlinedTextField(
@@ -149,7 +151,8 @@ fun LoginScreen(
                                 bringIntoViewRequester.bringIntoView()
                             }
                         }
-                    },
+                    }
+                    .testTag("LOGIN_EMAIL_FIELD"),
                 shape = RoundedCornerShape(55),
                 value = userEmail,
                 label = {
@@ -190,13 +193,14 @@ fun LoginScreen(
                                 bringIntoViewRequester.bringIntoView()
                             }
                         }
-                    },
+                    }
+                    .testTag("LOGIN_PASSWORD_FIELD"),
                 isError = isPasswordFieldEmpty,
                 shape = RoundedCornerShape(55),
                 value = userPassword,
                 label = {
                     Text(
-                        text = stringResource(id = R.string.password_field_label)
+                        text = stringResource(id = R.string.password_field_label),
                     )
                 },
                 onValueChange = {
@@ -217,19 +221,25 @@ fun LoginScreen(
                 },
                 trailingIcon = {
                     if (showPassword) {
-                        IconButton(onClick = { showPassword = false }) {
+                        IconButton(
+                            onClick = { showPassword = false },
+                            modifier = Modifier.testTag("LOGIN_PASSWORD_VISIBILITY_OFF_ICON"),
+                        ) {
                             Icon(
                                 painterResource(id = R.drawable.ic_visibility),
                                 contentDescription = stringResource(id = R.string.visibility_icon),
-                                tint = MaterialTheme.colors.primaryVariant
+                                tint = MaterialTheme.colors.primaryVariant,
                             )
                         }
                     } else {
-                        IconButton(onClick = { showPassword = true }) {
+                        IconButton(
+                            onClick = { showPassword = true },
+                            modifier = Modifier.testTag("LOGIN_PASSWORD_VISIBILITY_ON_ICON")
+                        ) {
                             Icon(
                                 painterResource(id = R.drawable.ic_visibility_off),
                                 contentDescription = stringResource(id = R.string.visibility_off_icon),
-                                tint = MaterialTheme.colors.primaryVariant
+                                tint = MaterialTheme.colors.primaryVariant,
                             )
                         }
                     }
@@ -249,7 +259,8 @@ fun LoginScreen(
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(40.dp),
+                    .height(40.dp)
+                    .testTag("LOGIN_BUTTON"),
                 enabled = userEmail.isNotEmpty() && userPassword.isNotEmpty(),
                 content = {
                     Text(
@@ -271,7 +282,8 @@ fun LoginScreen(
                     .fillMaxWidth()
                     .clickable {
                         showDialog = !showDialog
-                    },
+                    }
+                    .testTag("LOGIN_FORGOT_PASSWORD_BUTTON"),
                 color = MaterialTheme.colors.secondary,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.caption,
@@ -281,68 +293,47 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(40.dp))
 
             Text(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("LOGIN_WITH_LABEL"),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.caption,
                 text = stringResource(id = R.string.login_options)
             )
             Spacer(modifier = Modifier.height(8.dp))
 
-            Row {
-                IconButton(
-                    modifier = Modifier
-                        .height(50.dp),
-                    onClick = {
-                        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                            .requestIdToken(token)
-                            .requestEmail()
-                            .build()
 
-                        val googleSignInClient = GoogleSignIn.getClient(context, gso)
-                        launcher.launch(googleSignInClient.signInIntent)
-                    },
-                    content = {
+            IconButton(
+                modifier = Modifier
+                    .height(50.dp)
+                    .align(Alignment.CenterHorizontally)
+                    .testTag("GOOGLE_ICON_BUTTON"),
+                onClick = {
+                    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestIdToken(token)
+                        .requestEmail()
+                        .build()
 
-                        Icon(
-                            painterResource(id = R.drawable.icon_google),
-                            tint = Color.Unspecified,
-                            contentDescription = stringResource(id = R.string.google_icon)
-                        )
-                    }
+                    val googleSignInClient = GoogleSignIn.getClient(context, gso)
+                    launcher.launch(googleSignInClient.signInIntent)
+                },
+                content = {
 
-                )
-
-                Spacer(modifier = Modifier.width(32.dp))
-
-                IconButton(
-                    modifier = Modifier
-                        .height(50.dp),
-                    onClick = {
-                        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                            .requestIdToken(token)
-                            .requestEmail()
-                            .build()
-
-                        val googleSignInClient = GoogleSignIn.getClient(context, gso)
-                        launcher.launch(googleSignInClient.signInIntent)
-                    },
-                    content = {
-                        Icon(
-                            painterResource(id = R.drawable.ic_facebook),
-                            tint = Color.Unspecified,
-                            contentDescription = "Facebook authentication",
-                        )
-                    }
-                )
-
-            }
+                    Icon(
+                        painterResource(id = R.drawable.icon_google),
+                        tint = Color.Unspecified,
+                        contentDescription = stringResource(id = R.string.google_icon),
+                    )
+                }
+            )
 
             Spacer(modifier = Modifier.height(36.dp))
 
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .bringIntoViewRequester(bringIntoViewRequester),
+                    .bringIntoViewRequester(bringIntoViewRequester)
+                    .testTag("WITHOUT_ACCOUNT_SIGN_UP_LABEL"),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.caption,
                 text = stringResource(id = R.string.without_account)
@@ -353,7 +344,8 @@ fun LoginScreen(
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(40.dp),
+                    .height(40.dp)
+                    .testTag("REGISTRATION_BUTTON"),
                 content = {
                     Text(
                         text = stringResource(id = R.string.registration_button_text)
@@ -377,6 +369,7 @@ fun LoginScreen(
                         showToast = false
                     }
                     is Resource.Success -> {
+                        sharedPrefs.edit().putString("isTextToSpeechEnabled", "true").apply()
                         LaunchedEffect(Unit) {
                             navController.navigate(NAV_MAIN_SCREEN)
                         }
@@ -385,6 +378,7 @@ fun LoginScreen(
                         CircularProgressIndicator(
                             modifier = Modifier
                                 .size(10.dp)
+                                .testTag("LOGIN_PROGRESS_INDICATOR")
 
                         )
                     }
@@ -392,12 +386,12 @@ fun LoginScreen(
                         when (it) {
                             is Resource.Failure -> {
                                 if(showToast){
-
                                     Toast.makeText(context, it.exception.message, Toast.LENGTH_LONG).show()
                                 }
                                 showToast = false
                             }
                             is Resource.Success -> {
+                                sharedPrefs.edit().putString("isTextToSpeechEnabled", "true").apply()
                                 LaunchedEffect(Unit) {
                                     navController.navigate(NAV_MAIN_SCREEN)
                                 }
@@ -405,7 +399,8 @@ fun LoginScreen(
                             else -> {
                                 CircularProgressIndicator(
                                     modifier = Modifier
-                                        .size(10.dp),
+                                        .size(10.dp)
+                                        .testTag("GOOGLE_LOGIN_PROGRESS_INDICATOR"),
                                     color = MaterialTheme.colors.primaryVariant
                                 )
                             }
