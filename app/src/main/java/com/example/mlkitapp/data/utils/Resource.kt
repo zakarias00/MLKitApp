@@ -1,4 +1,4 @@
-package com.example.mlkitapp.data
+package com.example.mlkitapp.data.utils
 
 sealed class Resource<out R> {
     data class Success<out R>(val result: R): Resource<R>()

@@ -35,13 +35,16 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.example.mlkitapp.data.Resource
+import com.example.mlkitapp.R
+import com.example.mlkitapp.data.utils.Resource
 import com.example.mlkitapp.data.utils.SharedPreferences
+import com.example.mlkitapp.ui.main.imageprocess.viewmodel.ImageProcessViewModel
 import com.example.mlkitapp.ui.main.saved.component.SaveTextDialog
 import com.example.mlkitapp.ui.main.texttospeech.TextToSpeechViewModel
 import com.google.mlkit.vision.common.InputImage
@@ -61,7 +64,7 @@ fun GalleryScreen(
             imageUri = uri
     }
 
-    var textVal = remember { mutableStateOf("") }
+    val textVal = remember { mutableStateOf("") }
     val verticalScroll = rememberScrollState(0)
 
     val textRecognizerFlow = imageProcessViewModel.recognizedTextFlow.collectAsState()
@@ -97,7 +100,7 @@ fun GalleryScreen(
                     filterQuality = FilterQuality.High,
                     contentScale = ContentScale.Fit
                 ),
-                contentDescription = "Chosen image",
+                contentDescription = stringResource(id = R.string.chosen_image_description),
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .wrapContentSize()
@@ -116,7 +119,7 @@ fun GalleryScreen(
                     },
                     shape = RoundedCornerShape(55)
                 ) {
-                    Text(text = "Choose new photo")
+                    Text(text = stringResource(id = R.string.choose_new_image_button_text))
                 }
 
                 Spacer(modifier = Modifier.width(5.dp))
@@ -128,7 +131,7 @@ fun GalleryScreen(
                     shape = RoundedCornerShape(55)
                 )
                 {
-                    Text(text = "Save")
+                    Text(text = stringResource(id = R.string.save_button_text))
                 }
             }
 
@@ -210,7 +213,8 @@ fun GalleryScreen(
     }
     else if(textVal.value == ""){
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(bottom = 24.dp)
                 .pointerInput(Unit) {
                     detectTapGestures(
@@ -233,7 +237,7 @@ fun GalleryScreen(
                     shape = RoundedCornerShape(55)
                 )
                 {
-                    Text(text = "Chose image")
+                    Text(text = stringResource(id = R.string.choose_image_button_text))
                 }
             }
         }

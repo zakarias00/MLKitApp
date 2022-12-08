@@ -55,7 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.mlkitapp.R
-import com.example.mlkitapp.data.Resource
+import com.example.mlkitapp.data.utils.Resource
 import com.example.mlkitapp.ui.authentication.component.ChangePasswordAlertDialog
 import com.example.mlkitapp.ui.authentication.viewmodel.AuthViewModel
 import com.example.mlkitapp.ui.main.texttospeech.TextToSpeechViewModel

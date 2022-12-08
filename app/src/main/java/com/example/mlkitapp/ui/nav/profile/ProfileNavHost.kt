@@ -88,7 +88,7 @@ fun ProfileNavHost(
         composable(NAV_CLICKED_ITEM){
             TopBarTitleUtils.changeTitle(R.string.empty)
             SharedPreferences.setCurrentNavRoute(NAV_CLICKED_ITEM)
-            SharedPreferences.setTargetNavRoute(NAV_SAVED)
+            SharedPreferences.setTargetNavRoute(NAV_PROFILE)
             TextInfoScreen(
                 navController,
                 hiltViewModel()

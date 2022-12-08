@@ -1,7 +1,7 @@
 package com.example.mlkitapp.data.database
 
 import android.net.Uri
-import com.example.mlkitapp.data.Resource
+import com.example.mlkitapp.data.utils.Resource
 import com.example.mlkitapp.data.models.RecognizedText
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.storage.FirebaseStorage
@@ -50,17 +50,17 @@ class CloudDbRepositoryImpl @Inject constructor(
 
     override suspend fun deleteDocument(documentId: String, imageUrl: String) = callbackFlow {
 
-            trySend(Resource.Loading)
-            dbReference.document(documentId).delete().addOnSuccessListener {
-                storage.reference.child("images").child(getImageNameFromUrl(imageUrl)).delete().addOnCanceledListener {
-                    trySend(Resource.Success(it))
-                }.addOnFailureListener {
-                    trySend(Resource.Failure(it))
-                }
+        trySend(Resource.Loading)
+        dbReference.document(documentId).delete().addOnSuccessListener {
+            storage.reference.child("images").child(getImageNameFromUrl(imageUrl)).delete().addOnCanceledListener {
+                trySend(Resource.Success(it))
             }.addOnFailureListener {
                 trySend(Resource.Failure(it))
-            }.addOnCompleteListener { close() }
-            awaitClose { close() }
+            }
+        }.addOnFailureListener {
+            trySend(Resource.Failure(it))
+        }.addOnCompleteListener { close() }
+        awaitClose { close() }
 
     }
 

@@ -1,12 +1,12 @@
-package com.example.mlkitapp.ui.main.imageprocess
+package com.example.mlkitapp.ui.main.imageprocess.viewmodel
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mlkitapp.data.Resource
 import com.example.mlkitapp.data.database.CloudDbRepository
 import com.example.mlkitapp.data.mlkit.barcodescan.BarcodeScannerRepository
 import com.example.mlkitapp.data.mlkit.textrecogn.TextRecognRepository
+import com.example.mlkitapp.data.utils.Resource
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
 import dagger.hilt.android.lifecycle.HiltViewModel

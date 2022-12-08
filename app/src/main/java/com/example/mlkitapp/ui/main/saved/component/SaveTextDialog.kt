@@ -33,9 +33,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.example.mlkitapp.data.Resource
+import com.example.mlkitapp.data.utils.Resource
 import com.example.mlkitapp.data.utils.SharedPreferences
-import com.example.mlkitapp.ui.main.imageprocess.ImageProcessViewModel
+import com.example.mlkitapp.ui.main.imageprocess.viewmodel.ImageProcessViewModel
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.runBlocking

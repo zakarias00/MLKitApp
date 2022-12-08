@@ -55,7 +55,7 @@ fun AppBottomNavigation(
                 alwaysShowLabel = false,
                 selected = currentRoute == item.navRoute,
                 onClick = {
-                    textToSpeechViewModel.textToSpeech(context, "Now you are on ${item.navRoute} screen + ${item.textToRead}")
+                    textToSpeechViewModel.textToSpeech(context, "Now you are on ${item.navRoute} screen, ${item.textToRead}")
                     navController.navigate(item.navRoute) {
                         navController.graph.startDestinationRoute?.let { screen_route ->
                             popUpTo(screen_route) {

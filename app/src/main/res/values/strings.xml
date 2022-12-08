@@ -15,10 +15,9 @@
     <string name="forgotten_password_button_text">DID YOU FORGET YOUR PASSWORD?</string>
     <string name="login_options">LOGIN WITH</string>
     <string name="without_account">If you do not have an account, sign up!</string>
-    <string name="registration_button_text">REGISTRATE</string>
+    <string name="registration_button_text">REGISTRATION</string>
     <string name="cancel_button_text">CANCEL</string>
-
-    <string name="app_icon_button_description">Eye icon</string>
+    <string name="send_button_text">SEND</string>
 
     <string name="client_secret">350873722416-nkkpua2ka87gkcb1bk5f265ueas4c9vf.apps.googleusercontent.com</string>
     <string name="fb_app_id">843607933654556</string>
@@ -32,21 +31,24 @@
     <string name="gallery">Gallery</string>
 
     <string name="text_field">Text field</string>
-    <string name="document">Document</string>
     <string name="barcode">Barcode</string>
-    <string name="face">Face</string>
-    <string name="image">Image</string>
 
     <string name="menu">Menu</string>
 
-    <string name="camera_permission_disabled_title">Permission to access camera is disabled</string>
-    <string name="camera_permission_disabled_info">Permission to access is required to take photos of documents. Please go to Settings > App to allow App to access the camera</string>
-    <string name="camera_permission_info">Permission to access is required to take photos of documents. Please allow App to access the camera</string>
-    <string name="camera_permission_title">App would like to have access to camera</string>
-    <string name="camera_permission_button">OK</string>
-    <string name="camera_permission_disabled_button">Go to settings</string>
+    <string name="allow_button_text">Allow app to use location and camera</string>
+    <string name="open_settings_button_text">Open permission settings</string>
+
     <string name="title_activity_firebase">FirebaseActivity</string>
     <string name="title_activity_profile">ProfileActivity</string>
+
+    <string name="take_image_description">Taken image</string>
+    <string name="take_image_button_text">Taken photo</string>
+    <string name="take_new_image_button_text">Take new photo</string>
+    <string name="save_button_text">Save</string>
+
+    <string name="chosen_image_description">Chosen image</string>
+    <string name="choose_image_button_text">Choose photo</string>
+    <string name="choose_new_image_button_text">Choose new photo</string>
 
     <string name="account">Account</string>
     <string name="account_sub_title">Manage your account</string>
@@ -62,5 +64,9 @@
     <string name="visibility_icon">Visibility icon</string>
     <string name="visibility_off_icon">Visibility off icon</string>
     <string name="google_icon">Google icon</string>
+    <string name="app_icon_button_description">Eye icon</string>
+    <string name="profile_icon_description">Profile icon</string>
+    <string name="arrow_back_icon_description">Arrow back icon</string>
+    <string name="menu_icon_description">Menu icon</string>
 
 </resources>

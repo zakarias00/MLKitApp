@@ -2,8 +2,8 @@ package com.example.mlkitapp.ui.authentication.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mlkitapp.data.Resource
 import com.example.mlkitapp.data.auth.AuthRepository
+import com.example.mlkitapp.data.utils.Resource
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel

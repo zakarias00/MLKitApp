@@ -54,7 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.mlkitapp.R
-import com.example.mlkitapp.data.Resource
+import com.example.mlkitapp.data.utils.Resource
 import com.example.mlkitapp.ui.authentication.viewmodel.AuthViewModel
 import com.example.mlkitapp.ui.main.texttospeech.TextToSpeechViewModel
 import com.example.mlkitapp.ui.nav.routes.NAV_LOGIN
@@ -383,19 +383,19 @@ fun RegistrationScreen(
                     is Resource.Failure -> {
                         Toast.makeText(context, it.exception.message, Toast.LENGTH_LONG).show()
                     }
-                    Resource.Loading -> {
+                    is Resource.Success -> {
+                        sharedPrefs.edit().putString("isTextToSpeechEnabled", "true").apply()
+                        LaunchedEffect(Unit) {
+                            navController.navigate(NAV_MAIN_SCREEN)
+                        }
+                    }
+                    is Resource.Loading -> {
                         CircularProgressIndicator(
                             modifier = Modifier
                                 .size(10.dp)
                                 .testTag("REGISTRATION_PROGRESS_INDICATOR"),
                             color = MaterialTheme.colors.primaryVariant
                         )
-                    }
-                    is Resource.Success -> {
-                        sharedPrefs.edit().putString("isTextToSpeechEnabled", "true").apply()
-                        LaunchedEffect(Unit) {
-                            navController.navigate(NAV_MAIN_SCREEN)
-                        }
                     }
                 }
             }

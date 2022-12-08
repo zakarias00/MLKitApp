@@ -37,7 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.mlkitapp.data.Resource
+import com.example.mlkitapp.data.utils.Resource
 import com.example.mlkitapp.data.utils.SharedPreferences
 import com.example.mlkitapp.ui.main.saved.viewmodel.CloudDbViewModel
 import com.example.mlkitapp.ui.main.texttospeech.TextToSpeechViewModel
@@ -77,15 +77,8 @@ fun TextInfoScreen(
             verticalArrangement = Arrangement.spacedBy(4.dp),
             horizontalAlignment = Alignment.Start,
             ) {
-            val checkStateValue = recognizedText?.private!!
+            val checkStateValue = recognizedText!!.private!!
             val checkedState = remember { mutableStateOf(checkStateValue) }
-
-            val textToRead = "Post's information: location is ${recognizedText.address.toString()}" +
-                    "Recognized text is ${recognizedText.recognizedText}" +
-                    "Your post is private, you can change it, by tapping on the switch." +
-                    "You can open the post in map, by clicking the button at the bottom of the screen."
-
-            textToSpeechViewModel.textToSpeech(context, textToRead)
 
             Text(
                 text = "Location",

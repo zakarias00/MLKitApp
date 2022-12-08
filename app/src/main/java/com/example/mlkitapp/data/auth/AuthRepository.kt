@@ -1,6 +1,6 @@
 package com.example.mlkitapp.data.auth
 
-import com.example.mlkitapp.data.Resource
+import com.example.mlkitapp.data.utils.Resource
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseUser
 

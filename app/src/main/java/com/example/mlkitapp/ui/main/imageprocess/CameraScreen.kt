@@ -36,14 +36,17 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.example.mlkitapp.data.Resource
+import com.example.mlkitapp.R
+import com.example.mlkitapp.data.utils.Resource
 import com.example.mlkitapp.data.utils.SharedPreferences
 import com.example.mlkitapp.ui.main.imageprocess.fileprovider.ComposeFileProvider
+import com.example.mlkitapp.ui.main.imageprocess.viewmodel.ImageProcessViewModel
 import com.example.mlkitapp.ui.main.saved.component.SaveTextDialog
 import com.example.mlkitapp.ui.main.texttospeech.TextToSpeechViewModel
 import com.google.mlkit.vision.common.InputImage
@@ -104,7 +107,7 @@ fun CameraScreen(
                     filterQuality = FilterQuality.High,
                     contentScale = ContentScale.Fit,
                 ),
-                contentDescription = "Taken image",
+                contentDescription = stringResource(id = R.string.take_image_description),
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .wrapContentSize()
@@ -125,7 +128,7 @@ fun CameraScreen(
                         alreadyExecuted = false
                         textVal.value = ""
                     }) {
-                    Text(text = "Take new photo")
+                    Text(text = stringResource(id = R.string.take_new_image_button_text))
                 }
 
                 Spacer(modifier = Modifier.width(5.dp))
@@ -137,7 +140,7 @@ fun CameraScreen(
                     shape = RoundedCornerShape(55)
                 )
                 {
-                    Text(text = "Save")
+                    Text(text = stringResource(id = R.string.save_button_text))
                 }
             }
 
@@ -229,7 +232,8 @@ fun CameraScreen(
     else if(textVal.value == "")
     {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(bottom = 24.dp)
                 .pointerInput(Unit) {
                     detectTapGestures(
@@ -239,7 +243,7 @@ fun CameraScreen(
                             cameraLauncher.launch(uri)
                         },
                     )
-            },
+                },
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = CenterHorizontally
         ) {
@@ -256,7 +260,7 @@ fun CameraScreen(
                     shape = RoundedCornerShape(55)
                 )
                 {
-                    Text(text = "Take photo")
+                    Text(text = stringResource(id = R.string.take_image_button_text))
                 }
             }
         }

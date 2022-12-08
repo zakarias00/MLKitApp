@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.mlkitapp.data.Resource
+import com.example.mlkitapp.data.utils.Resource
 import com.example.mlkitapp.data.models.RecognizedText
 import com.example.mlkitapp.ui.main.saved.component.TextCard
 import com.example.mlkitapp.ui.main.saved.viewmodel.CloudDbViewModel
@@ -40,7 +40,7 @@ fun SavedScreen(
     var textList: List<RecognizedText> = mutableListOf()
 
     val textToSpeechViewModel: TextToSpeechViewModel = viewModel()
-    val context = LocalContext.current
+    val savedContext = LocalContext.current
 
     textsFlow.let { texts ->
         when (texts) {
@@ -61,6 +61,7 @@ fun SavedScreen(
     }
 
     if(textList.isEmpty()){
+        //textToSpeechViewModel.textToSpeech(savedContext, "Now you are on saved screen, but you do not have have any saved items yet")
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -72,27 +73,26 @@ fun SavedScreen(
                 style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center
             )
-
-            textToSpeechViewModel.textToSpeech(context, "Now you are on saved screen, but you do not have have any saved items yet")
         }
-
     }
-    LazyColumn(
-        state = rememberLazyListState(),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 36.dp),
-        contentPadding = PaddingValues(16.dp)
-    ) {
-        textToSpeechViewModel.textToSpeech(context, "Now you are on saved screen, you have ${textList.size} items saved. Click on the item to open it's details, or click on the trash icon to delete it")
+    else{
+        //textToSpeechViewModel.textToSpeech(savedContext, "Now you are on saved screen, you have ${textList.size} items saved. Click on the item to open it's details, or click on the trash icon to delete it")
 
-        items(textList.size) { index ->
-            if (textList[index].userId == FirebaseAuth.getInstance().currentUser!!.uid) {
-                TextCard(
-                    dbViewModel,
-                    textList[index],
-                    navigationController
-                )
+        LazyColumn(
+            state = rememberLazyListState(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 36.dp),
+            contentPadding = PaddingValues(16.dp)
+        ) {
+            items(textList.size) { index ->
+                if (textList[index].userId == FirebaseAuth.getInstance().currentUser!!.uid) {
+                    TextCard(
+                        dbViewModel,
+                        textList[index],
+                        navigationController
+                    )
+                }
             }
         }
     }

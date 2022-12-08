@@ -37,10 +37,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.mlkitapp.R
-import com.example.mlkitapp.data.Resource
 import com.example.mlkitapp.data.models.RecognizedText
 import com.example.mlkitapp.data.utils.LocationUtils
 import com.example.mlkitapp.data.utils.LocationUtils.fusedLocationProviderClient
+import com.example.mlkitapp.data.utils.Resource
 import com.example.mlkitapp.ui.FirebaseActivity
 import com.example.mlkitapp.ui.main.saved.viewmodel.CloudDbViewModel
 import com.example.mlkitapp.ui.main.texttospeech.TextToSpeechViewModel
@@ -135,10 +135,7 @@ fun MapScreen(
              )
             {
                  val textToRead = "Post's information: location is ${item.address.toString()}" +
-                         "Recognized text is ${item.recognizedText}" +
-                         "Your post is private, you can change it, by tapping on the switch." +
-                         "You can open the post in map, by clicking the button at the bottom of the screen."
-
+                         "Recognized text is ${item.recognizedText}"
                  textToSpeechViewModel.textToSpeech(context, textToRead)
 
                  Box(

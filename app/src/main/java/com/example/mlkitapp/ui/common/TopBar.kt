@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
+import com.example.mlkitapp.R
 import com.example.mlkitapp.data.utils.SharedPreferences
 import kotlinx.coroutines.CoroutineScope
 
@@ -55,7 +56,7 @@ fun TopBar(
                     {
                         Icon(
                             imageVector = buttonIcon,
-                            contentDescription = "Menu icon",
+                            contentDescription = stringResource(id = R.string.menu_icon_description),
                             tint = MaterialTheme.colors.primaryVariant
                         )
                     }
@@ -70,7 +71,7 @@ fun TopBar(
                     ) {
                         Icon(
                             imageVector = buttonIcon,
-                            contentDescription = "Arrow-back icon",
+                            contentDescription = stringResource(id = R.string.arrow_back_icon_description),
                             tint = MaterialTheme.colors.primaryVariant
                         )
                     }
@@ -82,7 +83,7 @@ fun TopBar(
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.Person,
-                        contentDescription = "Profile icon",
+                        contentDescription = stringResource(id = R.string.profile_icon_description),
                         tint = MaterialTheme.colors.primaryVariant
                     )
                 }

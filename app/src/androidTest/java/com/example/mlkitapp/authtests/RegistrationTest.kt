@@ -1,20 +1,20 @@
 package com.example.mlkitapp.authtests
 
 import androidx.activity.compose.setContent
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
-import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
-import androidx.compose.ui.test.printToLog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -35,13 +35,13 @@ import org.junit.FixMethodOrder
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runners.MethodSorters
-import kotlin.random.Random
+import java.util.Date
 
 @HiltAndroidTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class RegistrationTest {
 
-    val randomNr = Random.nextInt()
+    private val randomTimeStamp = Date().time
 
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
@@ -70,7 +70,7 @@ class RegistrationTest {
                         RegistrationScreen(authViewModel, navController)
                     }
                     composable(NAV_MAIN_SCREEN){
-                        MainScreen()
+                        MainScreen(Modifier.testTag("TAG"))
                     }
                 }
             }
@@ -201,8 +201,8 @@ class RegistrationTest {
     }
 
     @Test
-    fun circularIndicatorDisplaysOnWrongLoginInput(){
-        composeTestRule.onNodeWithTag("REGISTRATION_EMAIL_FIELD").performTextInput("$randomNr@email.com")
+    fun circularIndicatorDisplaysOnValidRegistrationInput(){
+        composeTestRule.onNodeWithTag("REGISTRATION_EMAIL_FIELD").performTextInput("$randomTimeStamp@email.com")
         composeTestRule.onNodeWithTag("REGISTRATION_PASSWORD_FIELD").performTextInput("12345678")
         composeTestRule.onNodeWithTag("REGISTRATION_CONFIRMED_PASSWORD_FIELD").performTextInput("12345678")
         composeTestRule.onNodeWithTag("REGISTRATION_BUTTON").performClick()
@@ -210,22 +210,26 @@ class RegistrationTest {
     }
 
     @Test
-    fun toastDisplaysOnWrongLoginData(){
+    fun loginScreenDoNotHideOnWrongRegistrationData(){
         composeTestRule.onNodeWithTag("REGISTRATION_EMAIL_FIELD").performTextInput("tesztelek2@tesztelek.hu")
         composeTestRule.onNodeWithTag("REGISTRATION_PASSWORD_FIELD").performTextInput("12345678")
         composeTestRule.onNodeWithTag("REGISTRATION_CONFIRMED_PASSWORD_FIELD").performTextInput("12345678")
         composeTestRule.onNodeWithTag("REGISTRATION_BUTTON").performClick()
-        composeTestRule.onNode(hasText("The email address is already in use by another account.")).assertIsDisplayed()
+        composeTestRule.onNodeWithTag("REGISTRATION_SCREEN").assertIsDisplayed()
     }
 
     @Test
     fun mainScreenDisplaysOnValidInput(){
-        composeTestRule.onNodeWithTag("REGISTRATION_EMAIL_FIELD").performTextInput("$randomNr@vmi.com")
+        composeTestRule.onNodeWithTag("REGISTRATION_EMAIL_FIELD").performTextInput("$randomTimeStamp@email.com")
         composeTestRule.onNodeWithTag("REGISTRATION_PASSWORD_FIELD").performTextInput("12345678")
         composeTestRule.onNodeWithTag("REGISTRATION_CONFIRMED_PASSWORD_FIELD").performTextInput("12345678")
-        composeTestRule.onNodeWithTag("REGISTRATION_BUTTON").performClick()
-        composeTestRule.waitForIdle()
-        composeTestRule.onRoot().printToLog("test_anna")
-        composeTestRule.onNodeWithTag("REGISTRATION_EMAIL_FIELD").assertIsNotDisplayed()
+        composeTestRule.onNodeWithText("REGISTRATION").performClick()
+        composeTestRule.waitUntil (
+            5000
+        ) {
+            composeTestRule.onAllNodesWithTag("MAIN_SCREEN")
+                .fetchSemanticsNodes().size == 1
+        }
+        composeTestRule.onNodeWithTag("MAIN_SCREEN").assertIsDisplayed()
     }
 }

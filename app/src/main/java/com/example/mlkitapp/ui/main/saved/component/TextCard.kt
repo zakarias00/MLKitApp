@@ -26,11 +26,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.mlkitapp.data.Resource
+import com.example.mlkitapp.data.utils.Resource
 import com.example.mlkitapp.data.models.RecognizedText
 import com.example.mlkitapp.data.utils.SharedPreferences
 import com.example.mlkitapp.ui.main.saved.viewmodel.CloudDbViewModel
+import com.example.mlkitapp.ui.main.texttospeech.TextToSpeechViewModel
 import com.example.mlkitapp.ui.nav.routes.NAV_CLICKED_ITEM
 
 @OptIn(InternalComposeApi::class)
@@ -38,12 +40,20 @@ import com.example.mlkitapp.ui.nav.routes.NAV_CLICKED_ITEM
 fun TextCard(
     dbViewModel: CloudDbViewModel,
     recognizedText: RecognizedText,
-    navController: NavController?
+    navController: NavController?,
+    tssViewModel: TextToSpeechViewModel = viewModel(),
 ) {
-    val context = LocalContext.current
+    val cardContext = LocalContext.current
     val deleteFlow = dbViewModel.deleteDocumentFlow.collectAsState()
 
     var showToast by remember { mutableStateOf(true) }
+
+    val itemIsPrivate = if(recognizedText.private == true) "private" else "public"
+
+    val itemInfo = "Post's information: location is ${recognizedText.address.toString()}" +
+            "Recognized text is ${recognizedText.recognizedText.toString()}" +
+            "Your post is ${itemIsPrivate}, you can change it, by tapping on the switch." +
+            "You can open the post in map, by clicking the button at the bottom of the screen."
 
     Card(
         modifier = Modifier
@@ -53,6 +63,7 @@ fun TextCard(
             .clickable {
                 SharedPreferences.addSharedRecognizedText(recognizedText)
                 navController!!.navigate(NAV_CLICKED_ITEM)
+                tssViewModel.textToSpeech(cardContext, itemInfo)
             },
         shape = RoundedCornerShape(12.dp),
         elevation = 5.dp,
@@ -91,13 +102,13 @@ fun TextCard(
             when (deleteResult) {
                 is Resource.Success -> {
                     //if (showToast) {
-                        Toast.makeText(context, "Successfully deleted item!", Toast.LENGTH_LONG).show()
+                        Toast.makeText(cardContext, "Successfully deleted item!", Toast.LENGTH_LONG).show()
                   //  }
 //                    deleteFlow.value = Resource.Loading
                 }
                 is Resource.Failure -> {
                     //if (showToast) {
-                        Toast.makeText(context, deleteResult.exception.message, Toast.LENGTH_LONG).show()
+                        Toast.makeText(cardContext, deleteResult.exception.message, Toast.LENGTH_LONG).show()
                    // }
                     showToast = false
                 }

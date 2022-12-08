@@ -1,6 +1,8 @@
 package com.example.mlkitapp.ui.nav.auth
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -25,7 +27,7 @@ fun AuthNavHost(navController: NavHostController) {
             RegistrationScreen(hiltViewModel(), navController)
         }
         composable(NAV_MAIN_SCREEN){
-            MainScreen()
+            MainScreen(Modifier.testTag("TAG"))
         }
     }
 }

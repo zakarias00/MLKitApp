@@ -61,6 +61,8 @@ fun SettingsScreen(
 
         val textToRead = "Now you are on the settings screen, where you can open several app related settings. By clicking on the first option, you open general app settings. By clicking on the second option you can open accessibility settings. By clicking on the third option you can open location settings. By clicking on the last option you can disable talkback."
 
+        textToSpeechViewModel.textToSpeech(context, textToRead)
+
         Spacer(modifier = Modifier.height(18.dp))
             
         Row(

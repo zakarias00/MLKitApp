@@ -39,7 +39,6 @@ import com.example.mlkitapp.ui.nav.routes.NAV_PROFILE
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalPermissionsApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "StateFlowValueCalledInComposition")
 @Composable
 fun BottomNavHost() {
@@ -67,7 +66,7 @@ fun BottomNavHost() {
     }
 
     Scaffold(
-        modifier = Modifier.testTag("NAV_BAR"),
+        modifier = Modifier.testTag("MAIN_SCREEN"),
         scaffoldState = scaffoldState,
         drawerContent = {
             NavigationDrawer(

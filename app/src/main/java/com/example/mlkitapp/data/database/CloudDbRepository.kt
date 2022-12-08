@@ -1,7 +1,7 @@
 package com.example.mlkitapp.data.database
 
 import android.net.Uri
-import com.example.mlkitapp.data.Resource
+import com.example.mlkitapp.data.utils.Resource
 import com.example.mlkitapp.data.models.RecognizedText
 import kotlinx.coroutines.flow.Flow
 

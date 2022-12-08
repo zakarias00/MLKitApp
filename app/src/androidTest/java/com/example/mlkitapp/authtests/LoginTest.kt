@@ -1,12 +1,15 @@
 package com.example.mlkitapp.authtests
 
 import androidx.activity.compose.setContent
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -65,7 +68,7 @@ class LoginTest {
                         RegistrationScreen(authViewModel, navController)
                     }
                     composable(NAV_MAIN_SCREEN){
-                        MainScreen()
+                        MainScreen(Modifier.testTag("TAG"))
                     }
                 }
             }
@@ -151,43 +154,39 @@ class LoginTest {
 
     @Test
     fun circularIndicatorDisplaysOnLoginInput(){
-        composeTestRule.onNodeWithTag("LOGIN_EMAIL_FIELD").performTextInput("cim@email.com")
+        composeTestRule.onNodeWithTag("LOGIN_EMAIL_FIELD").performTextInput("tesztelek2@tesztelek.hu")
         composeTestRule.onNodeWithTag("LOGIN_PASSWORD_FIELD").performTextInput("12345678")
         composeTestRule.onNodeWithTag("LOGIN_BUTTON").performClick()
-        composeTestRule.onNodeWithTag("LOGIN_PROGRESS_INDICATOR").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("LOGIN_PROGRESS_INDICATOR").assertExists()
     }
 
     @Test
-    fun circularIndicatorDisplaysOnGoogleLogin(){
-        composeTestRule.onNodeWithTag("GOOGLE_ICON_BUTTON").performClick()
-        composeTestRule.waitForIdle()
-        //composeTestRule.onNodeWithTag("GOOGLE_LOGIN_PROGRESS_INDICATOR").assertIsDisplayed()
-    }
-
-    @Test
-    fun toastDisplaysOnWrongEmailInput(){
-        composeTestRule.onNodeWithTag("LOGIN_EMAIL_FIELD").performTextInput("cim")
-        composeTestRule.onNodeWithTag("LOGIN_PASSWORD_FIELD").performTextInput("12345678")
-        composeTestRule.onNodeWithTag("LOGIN_BUTTON").performClick()
-        composeTestRule.onNodeWithText("The email address is badly formatted.").assertIsDisplayed()
-        composeTestRule.waitForIdle()
-    }
-
-    @Test
-    fun toastDisplaysOnWrongLoginData(){
+    fun loginScreenDoNotHideOnWrongLoginData(){
         composeTestRule.onNodeWithTag("LOGIN_EMAIL_FIELD").performTextInput("cim@emailcim.com")
         composeTestRule.onNodeWithTag("LOGIN_PASSWORD_FIELD").performTextInput("12345678")
-        composeTestRule.onNodeWithTag("LOGIN_BUTTON").performClick()
-       // composeTestRule.onNode(hasText("There is no user record corresponding to this identifier. The user may have been deleted.")).assertIsDisplayed()
+        composeTestRule.onNodeWithText("LOGIN").performClick()
+        composeTestRule.onNodeWithTag("LOGIN_SCREEN").assertExists()
+    }
+
+    @Test
+    fun loginScreenHidesOnValidInput(){
+        composeTestRule.onNodeWithTag("LOGIN_EMAIL_FIELD").performTextInput("tesztelek2@tesztelek.hu")
+        composeTestRule.onNodeWithTag("LOGIN_PASSWORD_FIELD").performTextInput("12345678")
+        composeTestRule.onNodeWithText("LOGIN").performClick()
+        composeTestRule.waitUntil {
+            composeTestRule.onAllNodesWithTag("MAIN_SCREEN")
+            .fetchSemanticsNodes().size == 1 }
+        composeTestRule.onNodeWithTag("LOGIN_SCREEN").assertDoesNotExist()
     }
 
     @Test
     fun mainScreenDisplaysOnValidInput(){
         composeTestRule.onNodeWithTag("LOGIN_EMAIL_FIELD").performTextInput("tesztelek2@tesztelek.hu")
         composeTestRule.onNodeWithTag("LOGIN_PASSWORD_FIELD").performTextInput("12345678")
-        composeTestRule.onNodeWithTag("LOGIN_BUTTON").performClick()
-        composeTestRule.waitForIdle()
-        Thread.sleep(2000)
-        //assert(composeTestRule.activity.actionBar!!.isShowing)
+        composeTestRule.onNodeWithText("LOGIN").performClick()
+        composeTestRule.waitUntil {
+            composeTestRule.onAllNodesWithTag("MAIN_SCREEN")
+                .fetchSemanticsNodes().size == 1 }
+        composeTestRule.onNodeWithTag("MAIN_SCREEN").assertIsDisplayed()
     }
 }

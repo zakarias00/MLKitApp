@@ -21,7 +21,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.mlkitapp.R
 import com.example.mlkitapp.ui.nav.main.BottomNavHost
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionsRequired
@@ -29,7 +31,9 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun MainScreen(){
+fun MainScreen(
+    modifier: Modifier
+){
     val multiplePermissionState = rememberMultiplePermissionsState(
         permissions = listOf(
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -50,7 +54,8 @@ fun MainScreen(){
         multiplePermissionsState = multiplePermissionState,
         permissionsNotGrantedContent = {
             Column(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
                     .testTag("MAIN"),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -62,7 +67,7 @@ fun MainScreen(){
                     },
                     shape = RoundedCornerShape(55.dp)
                 ) {
-                    Text("Allow app to use location and camera")
+                    Text(stringResource(id = R.string.allow_button_text))
                 }
             }
         },
@@ -80,7 +85,7 @@ fun MainScreen(){
                     },
                     shape = RoundedCornerShape(55.dp)
                 ) {
-                    Text("Open permission settings")
+                    Text(stringResource(id = R.string.open_settings_button_text))
                 }
             }
         }

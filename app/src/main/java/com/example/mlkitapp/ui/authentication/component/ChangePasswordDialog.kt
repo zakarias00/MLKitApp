@@ -24,9 +24,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.mlkitapp.R
 import com.example.mlkitapp.ui.authentication.viewmodel.AuthViewModel
 
 @Composable
@@ -68,7 +70,7 @@ fun ChangePasswordAlertDialog(
                     shape = RoundedCornerShape(55),
                     value = userEmail,
                     label = {
-                        Text(text = "Email")
+                        Text(text = stringResource(id = R.string.email_field_label))
                     },
                     onValueChange = {
                         userEmail = it
@@ -93,7 +95,7 @@ fun ChangePasswordAlertDialog(
                             Toast.makeText(context, "Please enter your email address to be able to reset your password!", Toast.LENGTH_LONG).show()
                     }
                 ){
-                    Text(text = "SEND")
+                    Text(text = stringResource(id = R.string.send_button_text))
                 }
             }
         }
