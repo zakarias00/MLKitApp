@@ -17,13 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mlkitapp.R
 import com.example.mlkitapp.ui.authentication.viewmodel.AuthViewModel
-import com.example.mlkitapp.ui.main.texttospeech.TextToSpeechViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -38,14 +37,13 @@ fun AccountManagerScreen(
     val providerName = provider.let {
         when (it.value) {
             "password" -> {
-                "email address and password"
+                R.string.email_and_password
             }
             "google.com" -> {
-                "Google account"
+                R.string.google_account
             }
-
             else -> {
-                ""
+                R.string.empty
             }
         }
     }
@@ -64,11 +62,6 @@ fun AccountManagerScreen(
         }
     }
 
-    val textToSpeechViewModel: TextToSpeechViewModel = viewModel()
-    val textToRead = "You are on account management screen, where you can change your password. You are signed in via $providerName"
-
-    textToSpeechViewModel.textToSpeech(LocalContext.current, textToRead)
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -79,12 +72,12 @@ fun AccountManagerScreen(
 
         Icon(
             painterResource(id = providerIcon),
-            contentDescription = providerName,
+            contentDescription = stringResource(id = providerName),
             tint = Color.Unspecified
         )
 
         Text(
-            "You are signed in with your $providerName",
+            text = stringResource(id = R.string.signed_in_via) + stringResource(id = providerName),
             fontSize = 18.sp,
             textAlign = TextAlign.Center,
         )
@@ -104,11 +97,11 @@ fun AccountManagerScreen(
                 context.startActivity(Intent.createChooser(intent, "Email"))
             }
         ) {
-            Text(text = "Change password")
+            Text(text = stringResource(id = R.string.change_password))
         }
         if (provider.value != "password") {
             Text(
-                text = "Note: You cannot change your password, because you are signed in via socials!",
+                text = stringResource(id = R.string.cant_change_password),
                 fontSize = 14.sp
             )
         }

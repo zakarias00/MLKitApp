@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -28,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.mlkitapp.ui.main.texttospeech.TextToSpeechViewModel
 import com.example.mlkitapp.ui.nav.profile.navitems.ProfileNavItems
 import com.google.firebase.auth.FirebaseAuth
 import java.util.Locale
@@ -36,7 +38,8 @@ import java.util.Locale
 fun ProfileNavItemsUi(
     modifier: Modifier = Modifier,
     navController: NavController,
-    onDestinationClicked: (route: String) -> Unit
+    onDestinationClicked: (route: String) -> Unit,
+    textToSpeechViewModel: TextToSpeechViewModel
 ) {
 
     val screens = listOf(
@@ -45,6 +48,8 @@ fun ProfileNavItemsUi(
         ProfileNavItems.Settings,
         ProfileNavItems.Logout,
     )
+
+    val profileContext = LocalContext.current
 
     val currentUserEmail = FirebaseAuth.getInstance().currentUser!!.email
     val backgroundColor = MaterialTheme.colors.primaryVariant.copy(0.8f)
@@ -97,6 +102,7 @@ fun ProfileNavItemsUi(
                     .clickable(enabled = true) {
                         item.title
                         onDestinationClicked(item.navRoute)
+                        textToSpeechViewModel.textToSpeech(profileContext, item.readableText)
                     }
                     .padding(all = 18.dp),
                 verticalAlignment = Alignment.CenterVertically

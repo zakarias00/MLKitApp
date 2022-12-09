@@ -229,8 +229,7 @@ fun CameraScreen(
             }
         }
     }
-    else if(textVal.value == "")
-    {
+    else if(textVal.value == "") {
         Column(
             modifier = Modifier
                 .fillMaxSize()

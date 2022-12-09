@@ -53,12 +53,13 @@ fun ProfileNavHost(
                         viewModel.logout()
                         context.startActivity(Intent(context, FirebaseActivity::class.java))
                     } else {
-                        textToSpeechViewModel.textToSpeech(context, route)
                         navController.navigate(route) {
                             launchSingleTop = true
                         }
                     }
-                })
+                },
+                textToSpeechViewModel = textToSpeechViewModel
+            )
         }
         composable(NAV_SAVED){
             TopBarTitleUtils.changeTitle(R.string.saved)

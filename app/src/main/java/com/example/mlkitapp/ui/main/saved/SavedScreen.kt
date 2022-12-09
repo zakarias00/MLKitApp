@@ -18,15 +18,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.mlkitapp.data.utils.Resource
+import com.example.mlkitapp.R
 import com.example.mlkitapp.data.models.RecognizedText
+import com.example.mlkitapp.data.utils.Resource
 import com.example.mlkitapp.ui.main.saved.component.TextCard
 import com.example.mlkitapp.ui.main.saved.viewmodel.CloudDbViewModel
-import com.example.mlkitapp.ui.main.texttospeech.TextToSpeechViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "UnrememberedMutableState")
@@ -38,9 +39,6 @@ fun SavedScreen(
 ) {
     val textsFlow = dbViewModel.getDocumentsFlow.value
     var textList: List<RecognizedText> = mutableListOf()
-
-    val textToSpeechViewModel: TextToSpeechViewModel = viewModel()
-    val savedContext = LocalContext.current
 
     textsFlow.let { texts ->
         when (texts) {
@@ -61,12 +59,11 @@ fun SavedScreen(
     }
 
     if(textList.isEmpty()){
-        //textToSpeechViewModel.textToSpeech(savedContext, "Now you are on saved screen, but you do not have have any saved items yet")
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "You does not have any saved items yet!",
+                text = stringResource(id = R.string.no_items_saved),
                 modifier = Modifier
                     .padding(36.dp),
                 color = Color.LightGray,
@@ -76,8 +73,6 @@ fun SavedScreen(
         }
     }
     else{
-        //textToSpeechViewModel.textToSpeech(savedContext, "Now you are on saved screen, you have ${textList.size} items saved. Click on the item to open it's details, or click on the trash icon to delete it")
-
         LazyColumn(
             state = rememberLazyListState(),
             modifier = Modifier
@@ -90,7 +85,8 @@ fun SavedScreen(
                     TextCard(
                         dbViewModel,
                         textList[index],
-                        navigationController
+                        navigationController,
+                        viewModel()
                     )
                 }
             }

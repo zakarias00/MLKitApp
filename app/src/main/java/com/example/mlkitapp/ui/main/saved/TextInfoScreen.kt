@@ -32,11 +32,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.mlkitapp.R
 import com.example.mlkitapp.data.utils.Resource
 import com.example.mlkitapp.data.utils.SharedPreferences
 import com.example.mlkitapp.ui.main.saved.viewmodel.CloudDbViewModel
@@ -81,7 +83,7 @@ fun TextInfoScreen(
             val checkedState = remember { mutableStateOf(checkStateValue) }
 
             Text(
-                text = "Location",
+                text = stringResource(id = R.string.location_label),
                 style = MaterialTheme.typography.body1,
                 color = Color.DarkGray,
             )
@@ -93,7 +95,7 @@ fun TextInfoScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Text",
+                text = stringResource(id = R.string.text_label),
                 style = MaterialTheme.typography.body1,
                 color = Color.DarkGray,
             )
@@ -105,7 +107,7 @@ fun TextInfoScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Image",
+                text = stringResource(id = R.string.image_label),
                 style = MaterialTheme.typography.body1,
                 color = Color.DarkGray,
             )
@@ -115,7 +117,7 @@ fun TextInfoScreen(
                         .data(recognizedText.imageUri)
                         .crossfade(true)
                         .build(),
-                    contentDescription = "Recognized text's image"
+                    contentDescription = stringResource(id = R.string.chosen_image_description)
                 )
             }
 
@@ -123,7 +125,7 @@ fun TextInfoScreen(
 
             Text(
                 style = MaterialTheme.typography.body1,
-                text = "Private",
+                text = stringResource(id = R.string.private_label),
                 color = Color.DarkGray,
             )
             Switch(
@@ -158,7 +160,7 @@ fun TextInfoScreen(
                 navController!!.navigate(NAV_CLICKED_ITEM_OPEN_MAP)
             }
         ) {
-            Text(text = "Open in map")
+            Text(text = stringResource(id = R.string.open_in_map_button_text))
         }
     }
     editFlow.value.let {

@@ -21,18 +21,19 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.InternalComposeApi
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.mlkitapp.R
 import com.example.mlkitapp.data.utils.Resource
 import com.example.mlkitapp.data.utils.SharedPreferences
 import com.example.mlkitapp.ui.main.imageprocess.viewmodel.ImageProcessViewModel
@@ -41,7 +42,6 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.runBlocking
 
 
-@OptIn(InternalComposeApi::class)
 @Composable
 fun SaveTextDialog(
     onDismiss: () -> Unit,
@@ -87,13 +87,13 @@ fun SaveTextDialog(
                 ){
                     Icon(
                         Icons.Default.ArrowBack,
-                        contentDescription = "",
+                        contentDescription = stringResource(id = R.string.arrow_back_icon_description),
                         tint = Color.Black
                     )
                 }
 
                 Text(
-                    text = "Do you want to save this to \n" + "the cloud?",
+                    text = stringResource(id = R.string.save_to_cloud),
                     modifier = Modifier.padding(10.dp),
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
@@ -101,7 +101,7 @@ fun SaveTextDialog(
 
                 Text(
                     text = "Note: If you save this to the cloud the other users will be able to see it.\n" +
-                            "If you don/t want this, you can save it just for yourself.",
+                            "If you do not want this, you can save it just for yourself.",
                     modifier = Modifier.padding(10.dp),
                     fontSize = 12.sp
                 )
@@ -130,7 +130,7 @@ fun SaveTextDialog(
                         enabled = (currLoc.latitude != 0.0 && currLoc.longitude != 0.0)
                     ) {
                         Text(
-                            text = "Save to the cloud",
+                            text = stringResource(id = R.string.public_save),
                             fontSize = 10.sp
                         )
                     }
@@ -156,7 +156,7 @@ fun SaveTextDialog(
                         enabled = (currLoc.latitude != 0.0 && currLoc.longitude != 0.0)
                         ) {
                         Text(
-                            text = "Save for myself",
+                            text = stringResource(id = R.string.private_save),
                             fontSize = 10.sp
                         )
                     }

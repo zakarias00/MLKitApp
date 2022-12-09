@@ -42,13 +42,17 @@
     <string name="title_activity_profile">ProfileActivity</string>
 
     <string name="take_image_description">Taken image</string>
-    <string name="take_image_button_text">Taken photo</string>
+    <string name="take_image_button_text">Take photo</string>
     <string name="take_new_image_button_text">Take new photo</string>
     <string name="save_button_text">Save</string>
 
     <string name="chosen_image_description">Chosen image</string>
     <string name="choose_image_button_text">Choose photo</string>
     <string name="choose_new_image_button_text">Choose new photo</string>
+
+    <string name="save_to_cloud">Do you want to save this to the cloud?</string>
+    <string name="private_save">Save for myself</string>
+    <string name="public_save">Save to the cloud</string>
 
     <string name="account">Account</string>
     <string name="account_sub_title">Manage your account</string>
@@ -59,6 +63,29 @@
     <string name="logout_sub_title">Logout from your account</string>
     <string name="title_activity_map">MapActivity</string>
 
+    <string name="email_and_password">email address and password</string>
+    <string name="google_account">Google account</string>
+    <string name="signed_in_via">You are signed in with your </string>
+    <string name="cant_change_password">Note: You cannot change your password, because you are signed in via socials! </string>
+    <string name="change_password">Change password</string>
+
+    <string name="no_items_saved">You does not have any saved items yet!</string>
+
+    <string name="location_label">Location</string>
+    <string name="text_label">Text</string>
+    <string name="image_label">Image</string>
+    <string name="private_label">Private</string>
+    <string name="open_in_map_button_text">Open in map</string>
+
+    <string name="app_info_label">App information</string>
+    <string name="app_info_subtitle_label">General application information</string>
+    <string name="accessibility_label">Accessibility settings</string>
+    <string name="accessibility_subtitle_label">Control your applications accessibility</string>
+    <string name="location_settings_label">Location settings</string>
+    <string name="location_settings_subtitle_label">Control your applications location settings</string>
+    <string name="talk_back_label">Talkback settings</string>
+    <string name="talk_back_subtitle_label">Control your applications talkback audio settings</string>
+
     <string name="empty"> </string>
 
     <string name="visibility_icon">Visibility icon</string>
@@ -67,6 +94,12 @@
     <string name="app_icon_button_description">Eye icon</string>
     <string name="profile_icon_description">Profile icon</string>
     <string name="arrow_back_icon_description">Arrow back icon</string>
+    <string name="arrow_forward_icon_description">Arrow forward icon</string>
     <string name="menu_icon_description">Menu icon</string>
+    <string name="delete_icon_description">Delete icon</string>
+    <string name="info_icon_description">Info icon</string>
+    <string name="accessibility_icon_description">Accessibility icon</string>
+    <string name="talk_back_icon_description">Talkback icon</string>
+    <string name="location_icon_description">Location icon</string>
 
 </resources>

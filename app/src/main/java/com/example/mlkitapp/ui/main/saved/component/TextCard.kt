@@ -18,18 +18,15 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.InternalComposeApi
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.mlkitapp.data.utils.Resource
+import com.example.mlkitapp.R
 import com.example.mlkitapp.data.models.RecognizedText
+import com.example.mlkitapp.data.utils.Resource
 import com.example.mlkitapp.data.utils.SharedPreferences
 import com.example.mlkitapp.ui.main.saved.viewmodel.CloudDbViewModel
 import com.example.mlkitapp.ui.main.texttospeech.TextToSpeechViewModel
@@ -41,12 +38,10 @@ fun TextCard(
     dbViewModel: CloudDbViewModel,
     recognizedText: RecognizedText,
     navController: NavController?,
-    tssViewModel: TextToSpeechViewModel = viewModel(),
+    tssViewModel: TextToSpeechViewModel,
 ) {
     val cardContext = LocalContext.current
     val deleteFlow = dbViewModel.deleteDocumentFlow.collectAsState()
-
-    var showToast by remember { mutableStateOf(true) }
 
     val itemIsPrivate = if(recognizedText.private == true) "private" else "public"
 
@@ -85,14 +80,13 @@ fun TextCard(
 
             IconButton(
                 onClick = {
-                    showToast = true
                     dbViewModel.deleteDocument(recognizedText.id!!, recognizedText.imageUri!!)
                 },
                 modifier = Modifier.weight(0.5F)
             ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete button",
+                    contentDescription = stringResource(id = R.string.delete_icon_description),
                     tint = MaterialTheme.colors.primary
                 )
             }
@@ -101,24 +95,12 @@ fun TextCard(
         deleteFlow.value.let { deleteResult ->
             when (deleteResult) {
                 is Resource.Success -> {
-                    //if (showToast) {
-                        Toast.makeText(cardContext, "Successfully deleted item!", Toast.LENGTH_LONG).show()
-                  //  }
-//                    deleteFlow.value = Resource.Loading
+                    Toast.makeText(cardContext, "Successfully deleted item!", Toast.LENGTH_LONG).show()
                 }
                 is Resource.Failure -> {
-                    //if (showToast) {
-                        Toast.makeText(cardContext, deleteResult.exception.message, Toast.LENGTH_LONG).show()
-                   // }
-                    showToast = false
+                    Toast.makeText(cardContext, deleteResult.exception.message, Toast.LENGTH_LONG).show()
                 }
                 is Resource.Loading -> {
-//                    CircularProgressIndicator(
-//                        modifier = Modifier
-//                            .padding(top = 36.dp)
-//                            .size(4.dp),
-//                        color = MaterialTheme.colors.primaryVariant
-//                    )
                 }
 
             }

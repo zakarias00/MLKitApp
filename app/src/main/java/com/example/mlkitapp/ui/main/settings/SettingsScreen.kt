@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -59,10 +59,6 @@ fun SettingsScreen(
 
         val textToSpeechViewModel: TextToSpeechViewModel = viewModel()
 
-        val textToRead = "Now you are on the settings screen, where you can open several app related settings. By clicking on the first option, you open general app settings. By clicking on the second option you can open accessibility settings. By clicking on the third option you can open location settings. By clicking on the last option you can disable talkback."
-
-        textToSpeechViewModel.textToSpeech(context, textToRead)
-
         Spacer(modifier = Modifier.height(18.dp))
             
         Row(
@@ -77,7 +73,7 @@ fun SettingsScreen(
             Icon(
                 modifier = Modifier.size(32.dp),
                 imageVector = Icons.Default.Info,
-                contentDescription = "Info icon",
+                contentDescription = stringResource(id = R.string.info_icon_description),
                 tint = MaterialTheme.colors.primaryVariant
             )
             Row(
@@ -94,7 +90,7 @@ fun SettingsScreen(
                 ) {
 
                     Text(
-                        text = "App information",
+                        text = stringResource(id = R.string.app_info_label),
                         style = TextStyle(
                             fontSize = 18.sp,
                         )
@@ -103,7 +99,7 @@ fun SettingsScreen(
                     Spacer(Modifier.height(2.dp))
 
                     Text(
-                        text = "General application information",
+                        text = stringResource(id = R.string.app_info_subtitle_label),
                         style = TextStyle(
                             fontSize = 14.sp,
                             letterSpacing = (0.8).sp,
@@ -117,7 +113,7 @@ fun SettingsScreen(
                     modifier = Modifier
                         .weight(weight = 0.5f, fill = false),
                     imageVector = Icons.Outlined.ArrowForward,
-                    contentDescription = "Arrow-forward icon"
+                    contentDescription = stringResource(id = R.string.arrow_forward_icon_description)
                 )
             }
         }
@@ -136,7 +132,7 @@ fun SettingsScreen(
             Icon(
                 modifier = Modifier.size(32.dp),
                 painter = painterResource(R.drawable.ic_accessibility),
-                contentDescription = "Accessibility icon",
+                contentDescription = stringResource(id = R.string.accessibility_icon_description),
                 tint = MaterialTheme.colors.primaryVariant
             )
             Row(
@@ -153,7 +149,7 @@ fun SettingsScreen(
                 ) {
 
                     Text(
-                        text = "Accessibility settings",
+                        text = stringResource(id = R.string.accessibility_label),
                         style = TextStyle(
                             fontSize = 18.sp
                         )
@@ -162,7 +158,7 @@ fun SettingsScreen(
                     Spacer(Modifier.height(2.dp))
 
                     Text(
-                        text = "Control your application's accessibility",
+                        text = stringResource(id = R.string.accessibility_subtitle_label),
                         style = TextStyle(
                             fontSize = 14.sp,
                             letterSpacing = (0.8).sp,
@@ -175,7 +171,7 @@ fun SettingsScreen(
                     modifier = Modifier
                         .weight(weight = 0.5f, fill = false),
                     imageVector = Icons.Outlined.ArrowForward,
-                    contentDescription = "Arrow-forward icon"
+                    contentDescription = stringResource(id = R.string.arrow_forward_icon_description)
                 )
             }
 
@@ -193,7 +189,7 @@ fun SettingsScreen(
             Icon(
                 modifier = Modifier.size(32.dp),
                 painter = painterResource(R.drawable.ic_locations),
-                contentDescription = "Location icon",
+                contentDescription = stringResource(id = R.string.location_icon_description),
                 tint = MaterialTheme.colors.primaryVariant
             )
 
@@ -209,7 +205,7 @@ fun SettingsScreen(
                         .padding(start = 16.dp)
                 ) {
                     Text(
-                        text = "Location settings",
+                        text = stringResource(id = R.string.location_settings_label),
                         style = TextStyle(
                             fontSize = 18.sp
                         )
@@ -217,7 +213,7 @@ fun SettingsScreen(
                     Spacer(Modifier.height(2.dp))
 
                     Text(
-                        text = "Control your application's location settings",
+                        text = stringResource(id = R.string.location_settings_subtitle_label),
                         style = TextStyle(
                             fontSize = 14.sp,
                             letterSpacing = (0.8).sp,
@@ -230,7 +226,7 @@ fun SettingsScreen(
                     modifier = Modifier
                         .weight(weight = 0.5f, fill = false),
                     imageVector = Icons.Outlined.ArrowForward,
-                    contentDescription = "Arrow-forward icon"
+                    contentDescription = stringResource(id = R.string.arrow_forward_icon_description)
                 )
             }
         }
@@ -244,7 +240,7 @@ fun SettingsScreen(
             Icon(
                 modifier = Modifier.size(32.dp),
                 painter = painterResource(R.drawable.ic_talk_back),
-                contentDescription = "Talkback icon",
+                contentDescription = stringResource(id = R.string.talk_back_icon_description),
                 tint = MaterialTheme.colors.primaryVariant
             )
 
@@ -260,7 +256,7 @@ fun SettingsScreen(
                         .padding(start = 16.dp)
                 ) {
                     Text(
-                        text = "Talkback settings",
+                        text = stringResource(id = R.string.talk_back_label),
                         style = TextStyle(
                             fontSize = 18.sp
                         )
@@ -268,7 +264,7 @@ fun SettingsScreen(
                     Spacer(Modifier.height(2.dp))
 
                     Text(
-                        text = "Control your application's talkback audio settings",
+                        text = stringResource(id = R.string.talk_back_subtitle_label),
                         style = TextStyle(
                             fontSize = 14.sp,
                             letterSpacing = (0.8).sp,
@@ -284,13 +280,12 @@ fun SettingsScreen(
                 .padding(start = 54.dp),
             checked = getBooleanFromString(checkStateValue.value!!),
             onCheckedChange = {
-                Log.i("anna", it.toString())
-                if(it)
+                if(getBooleanFromString(checkStateValue.value!!))
                 {
-                    textToSpeechViewModel.textToSpeech(context, "Now you turned off the talkback option")
+                    textToSpeechViewModel.textToSpeech(context, "Now you turned on the talkback option")
                 }
                 else{
-                    textToSpeechViewModel.textToSpeech(context, "Now you turned on the talkback option")
+                    textToSpeechViewModel.textToSpeech(context, "Now you turned off the talkback option")
                 }
                 checkStateValue.value = it.toString()
                 changeEnable(it, context)
