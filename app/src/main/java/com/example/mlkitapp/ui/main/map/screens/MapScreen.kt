@@ -1,4 +1,4 @@
-package com.example.mlkitapp.ui.main.map
+package com.example.mlkitapp.ui.main.map.screens
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -92,7 +92,7 @@ fun MapScreen(
         requestLocationUpdate = false
     }
 
-    var isSelected = remember{ mutableStateOf(false) }
+    val isSelected = remember{ mutableStateOf(false) }
 
     val icon = remember {
         mutableStateOf(if (!isSelected.value) bitmapDescriptorFromVector(context, R.drawable.ic_locations_32dp) else bitmapDescriptorFromVector(context, R.drawable.ic_location_selected))

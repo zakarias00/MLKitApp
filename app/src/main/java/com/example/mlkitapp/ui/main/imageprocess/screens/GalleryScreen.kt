@@ -1,4 +1,4 @@
-package com.example.mlkitapp.ui.main.imageprocess
+package com.example.mlkitapp.ui.main.imageprocess.screens
 
 import android.net.Uri
 import android.widget.Toast
@@ -38,7 +38,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.mlkitapp.R
@@ -53,7 +52,7 @@ import com.google.mlkit.vision.common.InputImage
 fun GalleryScreen(
     inputType: String,
     imageProcessViewModel: ImageProcessViewModel,
-    textToSpeechViewModel: TextToSpeechViewModel = viewModel(),
+    textToSpeechViewModel: TextToSpeechViewModel,
 ) {
     val context = LocalContext.current
 

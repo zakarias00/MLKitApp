@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.InternalComposeApi
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,9 +16,9 @@ import com.example.mlkitapp.ui.FirebaseActivity
 import com.example.mlkitapp.ui.authentication.viewmodel.AuthViewModel
 import com.example.mlkitapp.ui.main.profile.ProfileNavItemsUi
 import com.example.mlkitapp.ui.main.profile.screens.AccountManagerScreen
-import com.example.mlkitapp.ui.main.saved.ClickedItemMapScreen
-import com.example.mlkitapp.ui.main.saved.SavedScreen
-import com.example.mlkitapp.ui.main.saved.TextInfoScreen
+import com.example.mlkitapp.ui.main.saved.screens.ClickedItemMapScreen
+import com.example.mlkitapp.ui.main.saved.screens.SavedScreen
+import com.example.mlkitapp.ui.main.saved.screens.TextInfoScreen
 import com.example.mlkitapp.ui.main.settings.SettingsScreen
 import com.example.mlkitapp.ui.main.texttospeech.TextToSpeechViewModel
 import com.example.mlkitapp.ui.nav.routes.NAV_CLICKED_ITEM
@@ -36,7 +35,7 @@ import com.example.mlkitapp.ui.nav.routes.NAV_SAVED
 @Composable
 fun ProfileNavHost(
     navController: NavHostController,
-    textToSpeechViewModel: TextToSpeechViewModel = viewModel(),
+    textToSpeechViewModel: TextToSpeechViewModel,
 ) {
     val viewModel: AuthViewModel = hiltViewModel()
     val context = LocalContext.current

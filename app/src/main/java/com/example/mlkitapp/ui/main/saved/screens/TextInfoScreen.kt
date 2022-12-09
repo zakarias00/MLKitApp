@@ -1,4 +1,4 @@
-package com.example.mlkitapp.ui.main.saved
+package com.example.mlkitapp.ui.main.saved.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement

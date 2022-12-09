@@ -1,4 +1,4 @@
-package com.example.mlkitapp.ui.main.saved
+package com.example.mlkitapp.ui.main.saved.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
@@ -13,7 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.mlkitapp.R
 import com.example.mlkitapp.data.utils.SharedPreferences
-import com.example.mlkitapp.ui.main.map.bitmapDescriptorFromVector
+import com.example.mlkitapp.ui.main.map.screens.bitmapDescriptorFromVector
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap

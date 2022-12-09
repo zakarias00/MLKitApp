@@ -27,8 +27,8 @@ import com.example.mlkitapp.data.utils.SharedPreferences
 import com.example.mlkitapp.data.utils.TopBarTitleUtils
 import com.example.mlkitapp.ui.common.AppBottomNavigation
 import com.example.mlkitapp.ui.common.TopBar
-import com.example.mlkitapp.ui.main.imageprocess.CameraScreen
-import com.example.mlkitapp.ui.main.imageprocess.GalleryScreen
+import com.example.mlkitapp.ui.main.imageprocess.screens.CameraScreen
+import com.example.mlkitapp.ui.main.imageprocess.screens.GalleryScreen
 import com.example.mlkitapp.ui.main.map.MapActivity
 import com.example.mlkitapp.ui.main.texttospeech.TextToSpeechViewModel
 import com.example.mlkitapp.ui.nav.bottomnav.navitems.BottomNavItems
@@ -36,7 +36,6 @@ import com.example.mlkitapp.ui.nav.navdrawer.NavigationDrawer
 import com.example.mlkitapp.ui.nav.navdrawer.navitems.NavDrawerItems
 import com.example.mlkitapp.ui.nav.profile.ProfileNavHost
 import com.example.mlkitapp.ui.nav.routes.NAV_PROFILE
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "StateFlowValueCalledInComposition")
@@ -106,7 +105,8 @@ fun BottomNavHost() {
                         buttonIcon.value = Icons.Default.Menu
                         CameraScreen(
                             inputType = stringResource(id = titleRes.value),
-                            hiltViewModel()
+                            hiltViewModel(),
+                            textToSpeechViewModel
                         )
                     }
                     composable(BottomNavItems.Gallery.navRoute) {
@@ -114,7 +114,8 @@ fun BottomNavHost() {
                         buttonIcon.value = Icons.Default.Menu
                         GalleryScreen(
                             inputType = inputType,
-                            hiltViewModel()
+                            hiltViewModel(),
+                            textToSpeechViewModel
                         )
 
                     }
@@ -126,7 +127,8 @@ fun BottomNavHost() {
                         TopBarTitleUtils.changeTitle(R.string.profile)
                         buttonIcon.value = Icons.Default.ArrowBack
                         ProfileNavHost(
-                            rememberNavController()
+                            rememberNavController(),
+                            textToSpeechViewModel
                         )
                     }
                 }

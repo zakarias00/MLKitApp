@@ -1,4 +1,4 @@
-package com.example.mlkitapp.ui.main.saved
+package com.example.mlkitapp.ui.main.saved.screens
 
 import android.annotation.SuppressLint
 import android.widget.Toast
